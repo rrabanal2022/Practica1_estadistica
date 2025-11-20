@@ -1,0 +1,715 @@
+---
+title: "Práctica 1 estadística"
+author: "Ramón Martínez, Rodrigo Rabanal"
+format:
+  html:
+    theme: minty
+    css: estilos.css
+editor: visual
+toc: true
+toc-location: left
+toc-depth: 2
+---
+
+<img src="logo.png" class="logo"/>
+
+# 1. EXPLORACIÓN INICIAL
+
+Antes de empezar, cargamos las librerías que vamos a usar.
+
+```{r}
+
+library(dplyr)
+library(mice)
+library(VIM)
+library(naniar)
+library(car)
+
+```
+
+Empezaremos planteando una visualización de los datos, para entender la naturaleza de las variables y ver los valores con los que trabajaremos.
+
+```{r}
+datos <- read.csv("athletics_B.csv")
+
+summary(datos)
+
+str(datos)
+```
+
+Vamos a realizar un pequeño análisis exploratorio de datos, atendiendo a diferentes aspectos de los mismos.
+
+## 1. Media, medianay desviación típica
+
+En primer lugar, calcularemos la media, la mediana y la desviación típica del índice de rendimiento de los jugadores.
+
+```{r}
+#Calculamos la media del índice de rendimiento de los jugadores
+
+media_performance <- mean(datos$performance_index, na.rm = TRUE)
+
+#Devolvemos el valor calculado
+
+media_performance
+
+#Calculamos la mediana del índice de rendimiento de los jugadores
+
+mediana_performance <- median(datos$performance_index, na.rm = TRUE)
+
+#Devolvemos el valor calculado
+
+mediana_performance
+
+#Calculamos la desviación típica del índice de rendimiento de los jugadores
+
+dtip_performance <- sd(datos$performance_index, na.rm = TRUE)
+
+#Devolvemos el valor calculado
+
+dtip_performance
+
+```
+
+Se aprecia una media y una mediana parecidas, lo que parece indicar que la mayoría de jugadores se encuentran en un estado de forma relativamente similar.
+
+## 2. Histograma de la variable *performance_index*
+
+```{r}
+#Vamos a hacer un histograma del índice de rendimiento de los jugadores en 20 intervalos
+
+# Histograma de performance_index con 20 intervalos
+hist(datos$performance_index,
+     breaks = 20,            
+     main = "Histograma de Performance Index",  
+     xlab = "Performance Index",                
+     ylab = "Frecuencia",                       
+     col = "skyblue",                           
+     border = "white",
+     freq = FALSE) 
+
+lines(density(datos$performance_index),
+      col = "red",
+      lwd = 2)  
+
+cuartiles <- quantile(datos$performance_index, probs = c(0.25, 0.5, 0.75))
+
+# Añadimos líneas verticales discontinuas en los cuartiles
+abline(v = cuartiles, 
+       col = "darkgreen", 
+       lty = 2,      # tipo de línea discontinua
+       lwd = 2)      # grosor
+
+
+```
+
+En el histograma, podemos apreciar que la variable *performance_index* sigue una distribución normal.
+
+La línea roja marca la distribución, mientras que las líneas verdes discontinuas marcan los valores de los cuartiles; entre los que se encuentra el 50% de la muestra para esta variable.
+
+Esto complementa a lo que hemos deducido previamente a partir de los datos de la media y la mediana.
+
+## 3. Distribución de frecuencias relativas
+
+```{r}
+#Vamos a calcular la distribución de las frecuencias relativas de los jugadores por posición
+
+frecuencia <- table(datos$position)
+
+frecuencia_relativa <- prop.table(frecuencia)
+
+# Mostrar la tabla con frecuencias absolutas y relativas (en porcentaje)
+tabla_frecuencias <- data.frame(
+  Posición = names(frecuencia),
+  Frecuencia = as.vector(frecuencia),
+  Frecuencia_Relativa = round(as.vector(frecuencia_relativa) * 100, 2)
+)
+
+# Mostrar resultados
+tabla_frecuencias
+
+```
+
+Podemos observar que la frecuencia relativa de porteros es mucho menor que la del resto de posiciones. Esto se debe a que en un equipo juega un solo portero para los 3 o 4 defensas, 3 o 4 mediocentros y 2 o 3 delanteros. Por tanto, es lógico obtener ese valor. Caso análogo, pero en menor medida para los delanteros, que suponen un número inferior en la plantilla que los mediocentros y los defensas.
+
+## 4. Diagrama de cajas de *performace_index* según el equipo
+
+```{r}
+
+# Diagrama de cajas de performance_index según team
+boxplot(performance_index ~ team, 
+        data = datos,
+        main = "Diagrama de Cajas de Performance Index por Equipo",
+        xlab = "Equipo",
+        ylab = "Performance Index",
+        col = c("lightblue", "lightgreen", "lightpink", "khaki"),
+        border = "darkgray",
+        notch = TRUE)
+
+```
+
+En este *boxplot* podemos ver que en el equipo B hay una mayor variabilidad de resultados, pues los cuartiles son más grandes que los de los equipos A y B (que tienen niveles más similares de rendimiento). Sin embargo, la mediana del equipo B es claramente mayor que la del resto de equipos.
+
+Esto puede indicar un mayor nivel de algunos jugadores del equipo B con respecto de los jugadores del resto de equipos, pero también entre los jugadores del mismo equipo (mucha diferencia entre jugadores "estrellas" y el resto).
+
+Por último, en el equipo C tienen todos los jugadores un nivel muy similar; lo que podría provocar que el rendimiento medio sea mayor.
+
+## 5. Gráfico de dispersión entre *training_hours* y *performance_index*
+
+```{r}
+#Construimos un gráfico de dispersión entre training_hours y performance_index
+plot(datos$training_hours, datos$performance_index,
+     main = "Relación entre horas de entrenamiento y rendimiento",
+     xlab = "Horas de entrenamiento (training_hours)",
+     ylab = "Índice de rendimiento (performance_index)",
+     pch = 19,               # tipo de punto sólido
+     col = "steelblue",      # color de los puntos
+     cex = 1.2)              # tamaño de los puntos
+
+# Agregar una línea de tendencia (regresión lineal)
+abline(lm(performance_index ~ training_hours, data = datos), 
+       col = "red", lwd = 2)
+```
+
+Se aprecia linealidad en el modelo. Hay una clara relación lineal entre las horas de entrenamiento y el índice de rendimiento, apreciando un mayor rendimiento conforme aumentan las horas de entrenamiento.
+
+## 6. Matriz de correlaciones
+
+```{r}
+#Calculamos la matriz de correlaciones entre variables numéricas
+datos_numericos <- datos[, sapply(datos, is.numeric)]
+
+# Calcular la matriz de correlaciones
+matriz_cor <- cor(datos_numericos, use = "complete.obs")
+
+# Mostrar la matriz de correlaciones
+matriz_cor
+
+#Vamos a visualizarla
+library(corrplot)
+
+corrplot(matriz_cor, method = "color", type = "upper",
+         tl.col = "black", tl.cex = 0.8, 
+         addCoef.col = "black", number.cex = 0.4)
+
+```
+
+Aquí podemos ver la matriz de correlaciones. Vemos que las variables que presentan más correlación son los pases realizados con éxito y los pases intentados. Otras variables que presentan cierta correlación son el índice de rendimiento con la edad y las horas de entrenamiento.
+
+## 7. Gráfico de dispersión entre fatiga e índice de rendimiento
+
+```{r}
+
+#Representamos un gráfico de dispersión entre training_hours y performance_index
+library(ggplot2)
+
+ggplot(datos, aes(x = fatigue, y = performance_index)) +
+  geom_point(color = "steelblue", size = 2) +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  labs(title = "Relación entre fatiga e índice de rendimiento",
+       x = "Fatiga",
+       y = "Índice de rendimiento") +
+  theme_minimal()
+
+```
+
+Parece que hay una relación lineal entre ambas variables. En particular, podemos observar que parece haber una relación que indica una menor índice de rendimiento conforme la fatiga incrementa.
+
+## 8. Boxplot del índice de rendimiento por posición
+
+```{r}
+#Realizamos un boxplot de performance_index por posicion
+
+boxplot(performance_index ~ position,
+        data = datos,
+        main = "Diagrama de Cajas de Performance Index por Posición",
+        xlab = "Posición",
+        ylab = "Performance Index",
+        col = c("lightblue", "lightgreen", "lightpink", "khaki"),
+        border = "gray40",
+        notch = TRUE)
+
+
+```
+
+Se aprecian una serie de diferencias entre puestos, que procederemos a desarrollar. En primer lugar, no hay grandes diferencias en lo referente a la media del índice de rendimiento en función de la posición. Por otro lado, vemos que el tercer cuartil de los defensas es más pequeño que el resto, dando a entender que se encuentran más agrupados en esas zonas de rendimiento; destacando menos que en otras posiciones. Además, hay tres outliers con valores muy bajos de rendimiento. Finalmente, el último valor remarcable es el del portero, donde vemos que el "bigote" es de longitud mucho menor que el del resto de posiciones.
+
+## 9. Valores atípicos en *agility_time*
+
+```{r}
+# Vamos a identificar los valores atípicos en agility_time 
+
+# Calculamos los cuartiles y el rango intercuartílico
+Q1 <- quantile(datos$agility_time, 0.25, na.rm = TRUE)
+Q3 <- quantile(datos$agility_time, 0.75, na.rm = TRUE)
+IQR_value <- IQR(datos$agility_time, na.rm = TRUE)
+
+# Límites inferior y superior para detectar atípicos
+lim_inf <- Q1 - 1.5 * IQR_value
+lim_sup <- Q3 + 1.5 * IQR_value
+
+# Identificamos los valores atípicos
+outliers <- datos$agility_time[datos$agility_time < lim_inf | datos$agility_time > lim_sup]
+
+# Mostramos resultados
+outliers
+
+```
+
+Vemos que por la regla del rango intercuartílico (IQR) hay 5 valores atípicos, que se corresponden con NA. Es decir, valores no recogidos de esta variable para ciertos jugadores. Vamos a hacer un boxplot para intentar ver más posibles valores atípicos, donde estos hayan sido recogidos.
+
+```{r}
+boxplot(datos$agility_time,
+        main = "Detección de valores atípicos en Agility Time",
+        ylab = "Agility Time",
+        col = "lightblue",
+        border = "gray40")
+
+```
+
+La conclusión del boxplot es la misma. No hay valores atípicos en la variable agility_time, más allá de los valores no recogidos.
+
+## 10. Proporción de jugadores zurdos en la base de datos
+
+```{r}
+
+# Calculamos la proporción de jugadores zurdos
+proporcion_zurdos <- mean(datos$left_footed == 1, na.rm = TRUE)
+
+# Mostramos el resultado en porcentaje
+proporcion_zurdos * 100
+
+
+```
+
+Como podemos ver, el 29,17% de los jugadores de la base de datos son zurdos.
+
+# 2. MANEJO DE VALORES FALTANTES
+
+## 1. Identificación de variables con valores faltantes
+
+Primero, vemos qué columnas tienen valores NA
+
+```{r}
+
+# Ver columnas que contienen al menos un NA
+colnames(datos)[colSums(is.na(datos)) > 0]
+
+
+```
+Las variables *training_hours*, *sleep_hours*, *fatigue*, *strength_1RM* y *agility_time* tienen valores faltantes.
+
+Ahora, veremos cuántos valores faltan en cada una 
+
+```{r}
+# Cantidad de NA solo en columnas donde hay al menos uno
+na_counts <- colSums(is.na(datos))
+na_counts[na_counts > 0]
+
+
+```
+Así, vemos que hay 5 valores faltantes en cada una de estas variables.
+
+## 2. Calculamos la proporción de valores faltantes sobre el dataset completo
+
+```{r}
+
+# Porcentaje total de NA
+mean(is.na(datos)) * 100
+
+
+```
+
+Es decir, el 0.25% de los valores del dataset son valores faltantes.
+
+## 3. Resumen de combina las variables con missing y su porcentaje de valores ausentes
+
+```{r}
+
+# Calcular cantidad y porcentaje de NA por variable
+na_table <- data.frame(
+  variable = colnames(datos),
+  na_count = colSums(is.na(datos)),
+  na_percent = (1- colMeans(is.na(datos)) * 100)
+)
+
+# Filtrar solo variables con al menos un NA
+na_table <- na_table[na_table$na_count > 0, ]
+
+# Mostrar tabla
+na_table
+
+
+```
+
+## 4. Imputación por la media en *training_hours*
+
+```{r}
+
+# Calculamos la media de training_hours ignorando NA
+media_training <- mean(datos$training_hours, na.rm = TRUE)
+
+# Imputamos los NA con la media
+training_hours_imputada <- datos$training_hours
+training_hours_imputada[is.na(training_hours_imputada)] <- media_training
+
+# Calculamos de nuevo la media después de imputar
+nueva_media_training <- mean(training_hours_imputada)
+
+# Comprobamos que el valor es el mismo
+media_training
+nueva_media_training
+
+
+```
+
+Con esto, hemos sustituido los valores faltantes de la variable *training_hours* con la media de los valores de esta variable.
+
+## 5. Histogramas de *sleep_hours* antes y después de la imputación por la media
+
+En primer lugar, trabajaremos con la variable sin imputar (con valores faltantes).
+
+```{r}
+
+# Guardamos una copia de la variable original
+sleep_original <- datos$sleep_hours
+
+# Calculamos la media sin NA
+media_sleep <- mean(datos$sleep_hours, na.rm = TRUE)
+
+```
+
+A continuación, trabajaremos con la versión imputada.
+
+```{r}
+
+# Creamos la versión imputada
+sleep_imputada <- datos$sleep_hours
+sleep_imputada[is.na(sleep_imputada)] <- media_sleep
+
+```
+
+Ahora, podemos desarrollar los histogramas.
+
+```{r}
+
+# Histogramas antes y después
+par(mfrow = c(1, 2))  # Mostrar dos gráficos juntos
+
+hist(sleep_original,
+     main = "Sleep Hours - Antes imputación",
+     xlab = "Horas de sueño")
+
+hist(sleep_imputada,
+     main = "Sleep Hours - Después imputación con media",
+     xlab = "Horas de sueño")
+
+
+```
+
+Como podemos ver, no se aprecian diferencias aparentes. Esto se debe al hecho de que, al imputar los valores faltantes por la media, no modificamos la estructura presente de la variable. Así, el único cambio aparente es un aumento de la frecuencia para los valores cercanos a la mediana (asumimos que son los imputados). Sin embargo, como afirmamos, la distribución es la misma.
+
+
+## 6. Imputación por la mediana en *fatigue* y comparación con imputación con la media.
+
+En primer lugar, imputamos los valores por la mediana en la variable *fatigue*.
+
+```{r}
+# Calculamos la mediana ignorando NA
+mediana_fatigue <- median(datos$fatigue, na.rm = TRUE)
+
+# Crear una nueva variable con la imputación
+fatigue_imputada <- datos$fatigue
+fatigue_imputada[is.na(fatigue_imputada)] <- mediana_fatigue
+
+# Comprobamos que ya no hay NA
+sum(is.na(fatigue_imputada))
+
+
+```
+
+A continuación, hacemos la imputación por la media.
+
+```{r}
+
+# Calcular la media ignorando NA
+media_fatigue <- mean(datos$fatigue, na.rm = TRUE)
+
+# Crear nueva variable imputada por la media
+fatigue_imputada_media <- datos$fatigue
+fatigue_imputada_media[is.na(fatigue_imputada_media)] <- media_fatigue
+
+# Comprobar la imputación
+sum(is.na(fatigue_imputada_media))  
+
+
+```
+
+Ahora, porcedemos a comparar estas nuevas variables creadas.
+
+Para ello, empezaremos comparando estadísticas básicas mediante una tabla
+
+```{r}
+
+# Media original (ignorando NA)
+media_original <- mean(datos$fatigue, na.rm = TRUE)
+
+# Media tras imputación por mediana
+media_median <- mean(fatigue_imputada, na.rm = TRUE)
+
+# Media tras imputación por media
+media_mean <- mean(fatigue_imputada_media, na.rm = TRUE)
+
+# Mediana original
+mediana_original <- median(datos$fatigue, na.rm = TRUE)
+
+# Mediana tras imputación por mediana
+mediana_median <- median(fatigue_imputada, na.rm = TRUE)
+
+# Mediana tras imputación por media
+mediana_mean <- median(fatigue_imputada_media, na.rm = TRUE)
+
+data.frame(
+  Version = c("Original", "Imputación Mediana", "Imputación Media"),
+  Media = c(media_original, media_median, media_mean),
+  Mediana = c(mediana_original, mediana_median, mediana_mean)
+)
+
+
+```
+
+De esta manera, vemos que la imputación por la mediana modifica ligeramente la media de la variable; mientras que el valor de la mediana permanece intacto en cualquier caso. 
+
+Vamos a ver si este cambio es significativo. Para ello, haremos un *t-test*, cuya hipótesis nula será que el cambio no es significativo.
+
+```{r}
+
+# Valores originales sin NA
+original <- datos$fatigue[!is.na(datos$fatigue)]
+
+# Valores imputados por mediana
+imputada_mediana <- fatigue_imputada
+
+# Posiciones donde había NA
+na_pos <- which(is.na(datos$fatigue))
+
+# Comparar solo los valores imputados (NA reemplazados por mediana) con los originales
+imputados_vs_original <- cbind(original = datos$fatigue, imputada = imputada_mediana)
+
+# Para test t, usamos los NA reemplazados
+# Aquí hacemos un t-test aproximado usando todos los valores, aunque no es estrictamente válido
+t.test(original, imputada_mediana[1:length(original)], paired = TRUE)
+
+
+```
+
+El p-valor resulta muy elevado, por lo que no podemos rechazar la hipótesis nula. De esta manera, concluimos que la diferencia no es estadísticamente significativa.
+
+
+A continuación, haremos una comparación de histogramas, para ver si a nivel visual hay una diferencia apreciable.
+
+```{r}
+
+par(mfrow = c(1, 3))  # Mostrar tres gráficos juntos
+
+hist(datos$fatigue, main = "Original", xlab = "Fatigue", col = "lightblue")
+hist(fatigue_imputada, main = "Imputación Mediana", xlab = "Fatigue", col = "lightgreen")
+hist(fatigue_imputada_media, main = "Imputación Media", xlab = "Fatigue", col = "lightpink")
+
+
+
+```
+
+Como se puede ver, a nivel visual apenas hay diferencia. Simplemente, en ambas imputaciones,la barra que abarca los valores de la mediana incrementa (ya que la media es próxima a la mediana), pero mantienen la estructura. 
+
+Así, concluimos que apenas hay diferencias entre ambas imputaciones.
+
+## 7. Imputación condicional en *strength_1RM*
+
+```{r}
+
+# Creamos una nueva variable imputada sin modificar la original
+strength_1RM_imputada <- datos$strength_1RM
+
+# Calcular media por posición y reemplazamos los NA
+strength_1RM_imputada <- datos %>%
+  group_by(position) %>%
+  mutate(strength_1RM_imputada = ifelse(
+    is.na(strength_1RM),
+    mean(strength_1RM, na.rm = TRUE),
+    strength_1RM
+  )) %>%
+  ungroup() %>%
+  pull(strength_1RM_imputada)
+
+# Comprobar que los NA fueron imputados
+sum(is.na(strength_1RM_imputada))  # Debe ser 0
+
+```
+
+Una vez creada la variable, verificamos que cumple los objetivos y actualizaremos la variable *strength_1RM* del conjunto de datos.
+
+```{r}
+
+# Media por posición antes de imputar
+media_original <- datos %>%
+  group_by(position) %>%
+  summarise(media_strength = mean(strength_1RM, na.rm = TRUE))
+
+
+# Añadimos la variable al dataset
+datos$strength_1RM_imputada <- strength_1RM_imputada  
+
+# Media por posición después de imputar
+media_imputada <- datos %>%
+  group_by(position) %>%
+  summarise(media_strength = mean(strength_1RM_imputada, na.rm = TRUE))
+
+# Eliminamos la variable del dataset
+datos$strength_1RM_imputada <- NULL
+
+
+# Mostrar resultados
+media_original
+media_imputada
+
+```
+
+Vemos que los valores coinciden, por lo que la imputación ha sido realizada de forma correcta.
+
+## 8. Comentario acerca de los valores faltantes
+
+En primer lugar, para ello, vamos a ver el patrón de los NA. Es decir, vamos a ver dónde aparecen los NA, si hay combinaciones de NA entre variables o si aparecen de forma aleatoria. 
+
+```{r}
+
+md.pattern(datos)
+
+aggr(datos, prop = TRUE, numbers = TRUE)
+
+```
+
+Como podemos apreciar, no hay NA agrupados en la misma observación. Por tanto, podemos intuir que los valores faltantes son fruto del azar (MCAR). Por tanto, nos ayudaremos de un test estadístico que nos diga si lo son (el test mcar). 
+
+```{r}
+# Visualizar proporción de NA por variable
+vis_miss(datos)
+
+# Ver patrón de NA entre variables
+gg_miss_upset(datos)
+
+mcar_test(datos)
+
+
+```
+
+
+Como el p-valor es mayor de 0.05, no podemos rechazar que sean MCAR. 
+
+Con esto y la información anterior, podemos concluir que los valores faltantes que tenemos son MCAR, al provenir completamente del azar.
+
+## 9. Modelo lineal simple entre *performance_index* y *training_hours*
+
+```{r}
+
+# Ajustar modelo lineal simple usando solo casos completos
+modelo <- lm(performance_index ~ training_hours, data = datos, na.action = na.omit)
+
+# Resumen del modelo
+summary(modelo)
+
+
+```
+Como tenemos un modelo con 514 grados de libertad, es fácil deducir que se han perdido 5 observaciones por NA.
+
+A continuación, vamos a ver qué filas se han perdido exactamente.
+
+```{r}
+
+# Filas completas (sin NA) en performance_index y training_hours
+casos_completos <- complete.cases(datos[, c("performance_index", "training_hours")])
+
+# Filas perdidas (con NA)
+filas_perdidas <- which(!casos_completos)
+
+# Mostramos los índices de las filas perdidas
+filas_perdidas
+
+
+```
+## 10. Modelo lineal con valores imputados
+
+```{r}
+
+# Ajustar modelo lineal usando la variable imputada
+modelo_imputado <- lm(datos$performance_index ~ training_hours_imputada)
+
+# Resumen del modelo
+summary(modelo_imputado)
+
+
+```
+
+Vemos la diferencia entre los coeficientes de los modelos
+
+```{r}
+
+# Coeficientes del modelo original
+coef(modelo)
+
+# Coeficientes del modelo imputado
+coef(modelo_imputado)
+
+
+```
+
+Los coeficientes han cambiado ligeramente, al cambiar el número de observaciones, con valores añadidos manualmente. Sin embargo, la diferencia es mínima, al haber muy pocos valores faltantes, por lo que los cambios no influyen prácticamente en el modelo; ya que los coeficientes cambian mínimamente. 
+
+# 3. REGRESIÓN LINEAL SIMPLE Y MÚLTIPLE
+
+## 1. Modelo de regresión lineal simple entre *performance_index* y *training_hours*
+
+Emplearemos las variables imputadas comentadas previamente.
+
+```{r}
+
+# Resumen del modelo
+summary(modelo_imputado)
+
+
+```
+
+La pendiente (con valor 1.7112) indica que, por cada hora de entrenamiento, el valor del índice de rendimiento aumenta 1.7112.
+
+## 2. Gráfico de dispersión del modelo
+
+```{r}
+
+# Scatterplot
+plot(datos$training_hours, datos$performance_index,
+     main = "Performance Index vs Training Hours",
+     xlab = "Training Hours",
+     ylab = "Performance Index",
+     pch = 19, col = "blue")
+
+# Añadir recta ajustada del modelo imputado
+abline(lm(datos$performance_index ~ training_hours_imputada), col = "red", lwd = 2)
+
+# Leyenda
+legend("topleft", legend = c("Datos", "Recta modelo imputado"),
+       col = c("blue", "red"), pch = c(19, NA), lty = c(NA, 1), lwd = c(NA, 2))
+
+
+```
+
+## 3. Cálculo y análisis del R^2 del modelo
+
+En primer lugar, calcularemos el R^2 del modelo.
+
+```{r}
+
+# R^2 del modelo imputado
+summary(modelo_imputado)$r.squared
+
+
+```
+El R^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la variabilidad del índice de rendimiento.

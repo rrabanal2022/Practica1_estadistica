@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ramón Martínez, Rodrigo Rabanal">
+
+<title>Práctica 1 estadística</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Practica1_estadistica_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Practica1_estadistica_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Practica1_estadistica_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Practica1_estadistica_files/libs/quarto-html/popper.min.js"></script>
+<script src="Practica1_estadistica_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Practica1_estadistica_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Practica1_estadistica_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Practica1_estadistica_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Practica1_estadistica_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Practica1_estadistica_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Practica1_estadistica_files/libs/bootstrap/bootstrap-2a5858aadb409879eface58f2bab4920.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#exploración-inicial" id="toc-exploración-inicial" class="nav-link active" data-scroll-target="#exploración-inicial">1. EXPLORACIÓN INICIAL</a>
+  <ul class="collapse">
+  <li><a href="#media-medianay-desviación-típica" id="toc-media-medianay-desviación-típica" class="nav-link" data-scroll-target="#media-medianay-desviación-típica">1. Media, medianay desviación típica</a></li>
+  <li><a href="#histograma-de-la-variable-performance_index" id="toc-histograma-de-la-variable-performance_index" class="nav-link" data-scroll-target="#histograma-de-la-variable-performance_index">2. Histograma de la variable <em>performance_index</em></a></li>
+  <li><a href="#distribución-de-frecuencias-relativas" id="toc-distribución-de-frecuencias-relativas" class="nav-link" data-scroll-target="#distribución-de-frecuencias-relativas">3. Distribución de frecuencias relativas</a></li>
+  <li><a href="#diagrama-de-cajas-de-performace_index-según-el-equipo" id="toc-diagrama-de-cajas-de-performace_index-según-el-equipo" class="nav-link" data-scroll-target="#diagrama-de-cajas-de-performace_index-según-el-equipo">4. Diagrama de cajas de <em>performace_index</em> según el equipo</a></li>
+  <li><a href="#gráfico-de-dispersión-entre-training_hours-y-performance_index" id="toc-gráfico-de-dispersión-entre-training_hours-y-performance_index" class="nav-link" data-scroll-target="#gráfico-de-dispersión-entre-training_hours-y-performance_index">5. Gráfico de dispersión entre <em>training_hours</em> y <em>performance_index</em></a></li>
+  <li><a href="#matriz-de-correlaciones" id="toc-matriz-de-correlaciones" class="nav-link" data-scroll-target="#matriz-de-correlaciones">6. Matriz de correlaciones</a></li>
+  <li><a href="#gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento" id="toc-gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento" class="nav-link" data-scroll-target="#gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento">7. Gráfico de dispersión entre fatiga e índice de rendimiento</a></li>
+  <li><a href="#boxplot-del-índice-de-rendimiento-por-posición" id="toc-boxplot-del-índice-de-rendimiento-por-posición" class="nav-link" data-scroll-target="#boxplot-del-índice-de-rendimiento-por-posición">8. Boxplot del índice de rendimiento por posición</a></li>
+  <li><a href="#valores-atípicos-en-agility_time" id="toc-valores-atípicos-en-agility_time" class="nav-link" data-scroll-target="#valores-atípicos-en-agility_time">9. Valores atípicos en <em>agility_time</em></a></li>
+  <li><a href="#proporción-de-jugadores-zurdos-en-la-base-de-datos" id="toc-proporción-de-jugadores-zurdos-en-la-base-de-datos" class="nav-link" data-scroll-target="#proporción-de-jugadores-zurdos-en-la-base-de-datos">10. Proporción de jugadores zurdos en la base de datos</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Práctica 1 estadística</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ramón Martínez, Rodrigo Rabanal </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="logo.png" class="logo"></p>
+<section id="exploración-inicial" class="level1">
+<h1>1. EXPLORACIÓN INICIAL</h1>
+<p>Empezaremos planteando una visualización de los datos, para entender la naturaleza de las variables y ver los valores con los que trabajaremos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"athletics_B.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> performance_index injuries_count      starter        passes_attempted
+ Min.   :27.27     Min.   :0.0000   Min.   :0.00000   Min.   : 10.00  
+ 1st Qu.:53.06     1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.: 34.00  
+ Median :59.93     Median :0.0000   Median :0.00000   Median : 56.00  
+ Mean   :59.23     Mean   :0.3321   Mean   :0.02111   Mean   : 55.66  
+ 3rd Qu.:66.40     3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.: 78.00  
+ Max.   :82.62     Max.   :4.0000   Max.   :1.00000   Max.   :100.00  
+                                                                      
+ passes_success       age        training_hours  match_intensity 
+ Min.   : 0.00   Min.   :17.00   Min.   : 4.26   Min.   : 30.00  
+ 1st Qu.:14.00   1st Qu.:22.00   1st Qu.:11.26   1st Qu.: 63.60  
+ Median :25.00   Median :26.00   Median :13.75   Median : 70.30  
+ Mean   :26.53   Mean   :26.45   Mean   :13.69   Mean   : 70.77  
+ 3rd Qu.:37.00   3rd Qu.:31.00   3rd Qu.:15.95   3rd Qu.: 78.70  
+ Max.   :77.00   Max.   :36.00   Max.   :24.75   Max.   :100.00  
+                                 NA's   :5                       
+   position          sleep_hours     travel_km_week      fatigue     
+ Length:521         Min.   : 4.470   Min.   :   0.0   Min.   :10.00  
+ Class :character   1st Qu.: 6.577   1st Qu.: 362.6   1st Qu.:39.52  
+ Mode  :character   Median : 7.210   Median : 833.3   Median :49.30  
+                    Mean   : 7.184   Mean   : 822.5   Mean   :49.40  
+                    3rd Qu.: 7.780   3rd Qu.:1217.5   3rd Qu.:59.73  
+                    Max.   :10.000   Max.   :3028.4   Max.   :93.20  
+                    NA's   :5                         NA's   :5      
+  strength_1RM    agility_time   nutrition_score      team          
+ Min.   : 80.0   Min.   : 9.00   Min.   : 2.200   Length:521        
+ 1st Qu.:133.0   1st Qu.:10.74   1st Qu.: 5.700   Class :character  
+ Median :149.7   Median :11.45   Median : 6.700   Mode  :character  
+ Mean   :149.2   Mean   :11.47   Mean   : 6.772                     
+ 3rd Qu.:164.9   3rd Qu.:12.21   3rd Qu.: 7.900                     
+ Max.   :217.2   Max.   :14.26   Max.   :10.000                     
+ NA's   :5       NA's   :5                                          
+  left_footed     previous_injuries altitude_home   
+ Min.   :0.0000   Min.   : 0.000    Min.   :   0.0  
+ 1st Qu.:0.0000   1st Qu.: 0.000    1st Qu.: 269.2  
+ Median :0.0000   Median : 1.000    Median : 472.6  
+ Mean   :0.2917   Mean   : 2.296    Mean   : 482.0  
+ 3rd Qu.:1.0000   3rd Qu.: 3.000    3rd Qu.: 669.5  
+ Max.   :1.0000   Max.   :29.000    Max.   :1445.0  
+                                                    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   521 obs. of  19 variables:
+ $ performance_index: num  64.4 65.7 70.2 58.1 73.3 ...
+ $ injuries_count   : int  3 2 0 0 0 0 1 0 0 0 ...
+ $ starter          : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ passes_attempted : int  53 56 87 88 49 93 13 18 70 71 ...
+ $ passes_success   : int  15 25 45 44 24 47 8 9 45 32 ...
+ $ age              : int  25 36 36 24 36 33 29 33 32 36 ...
+ $ training_hours   : num  11.3 13.2 14.1 13 18 ...
+ $ match_intensity  : num  79.6 70.3 66.5 64.5 75 66 81.5 70.8 66.6 58.8 ...
+ $ position         : chr  "Forward" "Defender" "Defender" "Midfielder" ...
+ $ sleep_hours      : num  6.86 7.29 8.49 7 9.01 6.71 8.31 7.43 8.06 6.36 ...
+ $ travel_km_week   : num  414 236 267 1297 1315 ...
+ $ fatigue          : num  59.8 57.4 43.1 56.4 42.5 68.2 56 49.1 18.6 61.9 ...
+ $ strength_1RM     : num  131 133 154 131 169 ...
+ $ agility_time     : num  12.1 10.8 11.8 10.6 11.6 ...
+ $ nutrition_score  : num  5.9 7.8 6.9 6.2 6.2 6.4 5.9 6.7 7.3 6 ...
+ $ team             : chr  "Team C" "Team B" "Team C" "Team B" ...
+ $ left_footed      : int  1 0 0 0 1 0 0 0 0 1 ...
+ $ previous_injuries: int  0 0 1 0 4 1 1 0 0 0 ...
+ $ altitude_home    : num  840 717 560 1055 358 ...</code></pre>
+</div>
+</div>
+<p>Vamos a realizar un pequeño análisis exploratorio de datos, atendiendo a diferentes aspectos de los mismos.</p>
+<section id="media-medianay-desviación-típica" class="level2">
+<h2 class="anchored" data-anchor-id="media-medianay-desviación-típica">1. Media, medianay desviación típica</h2>
+<p>En primer lugar, calcularemos la media, la mediana y la desviación típica del índice de rendimiento de los jugadores.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la media del índice de rendimiento de los jugadores</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>media_performance <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>media_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 59.23209</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la mediana del índice de rendimiento de los jugadores</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mediana_performance <span class="ot">&lt;-</span> <span class="fu">median</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>mediana_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 59.93</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la desviación típica del índice de rendimiento de los jugadores</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>dtip_performance <span class="ot">&lt;-</span> <span class="fu">sd</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>dtip_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.784195</code></pre>
+</div>
+</div>
+<p>Se aprecia una media y una mediana parecidas, lo que parece indicar que la mayoría de jugadores se encuentran en un estado de forma relativamente similar.</p>
+</section>
+<section id="histograma-de-la-variable-performance_index" class="level2">
+<h2 class="anchored" data-anchor-id="histograma-de-la-variable-performance_index">2. Histograma de la variable <em>performance_index</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a hacer un histograma del índice de rendimiento de los jugadores en 20 intervalos</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma de performance_index con 20 intervalos</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(datos<span class="sc">$</span>performance_index,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>,            </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Histograma de Performance Index"</span>,  </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Performance Index"</span>,                </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Frecuencia"</span>,                       </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"skyblue"</span>,                           </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"white"</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(datos<span class="sc">$</span>performance_index),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="dv">2</span>)  </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>cuartiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>performance_index, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadimos líneas verticales discontinuas en los cuartiles</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> cuartiles, </span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"darkgreen"</span>, </span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="dv">2</span>,      <span class="co"># tipo de línea discontinua</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)      <span class="co"># grosor</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>En el histograma, podemos apreciar que la variable <em>performance_index</em> sigue una distribución normal.</p>
+<p>La línea roja marca la distribución, mientras que las líneas verdes discontinuas marcan los valores de los cuartiles; entre los que se encuentra el 50% de la muestra para esta variable.</p>
+<p>Esto complementa a lo que hemos deducido previamente a partir de los datos de la media y la mediana.</p>
+</section>
+<section id="distribución-de-frecuencias-relativas" class="level2">
+<h2 class="anchored" data-anchor-id="distribución-de-frecuencias-relativas">3. Distribución de frecuencias relativas</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a calcular la distribución de las frecuencias relativas de los jugadores por posición</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>frecuencia <span class="ot">&lt;-</span> <span class="fu">table</span>(datos<span class="sc">$</span>position)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>frecuencia_relativa <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(frecuencia)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar la tabla con frecuencias absolutas y relativas (en porcentaje)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>tabla_frecuencias <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  Posición <span class="ot">=</span> <span class="fu">names</span>(frecuencia),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frecuencia =</span> <span class="fu">as.vector</span>(frecuencia),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frecuencia_Relativa =</span> <span class="fu">round</span>(<span class="fu">as.vector</span>(frecuencia_relativa) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>tabla_frecuencias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Posición Frecuencia Frecuencia_Relativa
+1   Defender        172               33.01
+2    Forward        121               23.22
+3 Goalkeeper         37                7.10
+4 Midfielder        191               36.66</code></pre>
+</div>
+</div>
+<p>Podemos observar que la frecuencia relativa de porteros es mucho menor que la del resto de posiciones. Esto se debe a que en un equipo juega un solo portero para los 3 o 4 defensas, 3 o 4 mediocentros y 2 o 3 delanteros. Por tanto, es lógico obtener ese valor. Caso análogo, pero en menor medida para los delanteros, que suponen un número inferior en la plantilla que los mediocentros y los defensas.</p>
+</section>
+<section id="diagrama-de-cajas-de-performace_index-según-el-equipo" class="level2">
+<h2 class="anchored" data-anchor-id="diagrama-de-cajas-de-performace_index-según-el-equipo">4. Diagrama de cajas de <em>performace_index</em> según el equipo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagrama de cajas de performance_index según team</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(performance_index <span class="sc">~</span> team, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> datos,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Diagrama de Cajas de Performance Index por Equipo"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Equipo"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightgreen"</span>, <span class="st">"lightpink"</span>, <span class="st">"khaki"</span>),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"darkgray"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">notch =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>En este <em>boxplot</em> podemos ver que en el equipo B hay una mayor variabilidad de resultados, pues los cuartiles son más grandes que los de los equipos A y B (que tienen niveles más similares de rendimiento). Sin embargo, la mediana del equipo B es claramente mayor que la del resto de equipos.</p>
+<p>Esto puede indicar un mayor nivel de algunos jugadores del equipo B con respecto de los jugadores del resto de equipos, pero también entre los jugadores del mismo equipo (mucha diferencia entre jugadores “estrellas” y el resto).</p>
+<p>Por último, en el equipo C tienen todos los jugadores un nivel muy similar; lo que podría provocar que el rendimiento medio sea mayor.</p>
+</section>
+<section id="gráfico-de-dispersión-entre-training_hours-y-performance_index" class="level2">
+<h2 class="anchored" data-anchor-id="gráfico-de-dispersión-entre-training_hours-y-performance_index">5. Gráfico de dispersión entre <em>training_hours</em> y <em>performance_index</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Construimos un gráfico de dispersión entre training_hours y performance_index</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(datos<span class="sc">$</span>training_hours, datos<span class="sc">$</span>performance_index,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relación entre horas de entrenamiento y rendimiento"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Horas de entrenamiento (training_hours)"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Índice de rendimiento (performance_index)"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>,               <span class="co"># tipo de punto sólido</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"steelblue"</span>,      <span class="co"># color de los puntos</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex =</span> <span class="fl">1.2</span>)              <span class="co"># tamaño de los puntos</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregar una línea de tendencia (regresión lineal)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(performance_index <span class="sc">~</span> training_hours, <span class="at">data =</span> datos), </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se aprecia linealidad en el modelo. Hay una clara relación lineal entre las horas de entrenamiento y el índice de rendimiento, apreciando un mayor rendimiento conforme aumentan las horas de entrenamiento.</p>
+</section>
+<section id="matriz-de-correlaciones" class="level2">
+<h2 class="anchored" data-anchor-id="matriz-de-correlaciones">6. Matriz de correlaciones</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la matriz de correlaciones entre variables numéricas</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos[, <span class="fu">sapply</span>(datos, is.numeric)]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular la matriz de correlaciones</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>matriz_cor <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_numericos, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar la matriz de correlaciones</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>matriz_cor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  performance_index injuries_count      starter
+performance_index        1.00000000    0.023092517  0.062093683
+injuries_count           0.02309252    1.000000000 -0.012381095
+starter                  0.06209368   -0.012381095  1.000000000
+passes_attempted         0.03759048   -0.030800317 -0.059914133
+passes_success           0.22380445   -0.023382065 -0.017004059
+age                      0.50942713    0.045909025  0.034108003
+training_hours           0.58645594    0.051006061  0.044900932
+match_intensity          0.10552445   -0.026426679  0.081841376
+sleep_hours              0.14023856    0.021746277  0.020135890
+travel_km_week          -0.22917329   -0.007683223 -0.200966251
+fatigue                 -0.23504795    0.079240490 -0.065515153
+strength_1RM             0.02651421   -0.147472578  0.130241382
+agility_time            -0.08322814   -0.106329647 -0.017235246
+nutrition_score          0.02612729   -0.006310515 -0.016386628
+left_footed              0.07554008   -0.013995969  0.026497015
+previous_injuries        0.00814568    0.164320068 -0.009129866
+altitude_home           -0.06560546    0.022619805  0.009302464
+                  passes_attempted passes_success          age training_hours
+performance_index      0.037590485    0.223804447  0.509427135    0.586455936
+injuries_count        -0.030800317   -0.023382065  0.045909025    0.051006061
+starter               -0.059914133   -0.017004059  0.034108003    0.044900932
+passes_attempted       1.000000000    0.819494081 -0.056254340    0.038102814
+passes_success         0.819494081    1.000000000 -0.014567435    0.213223626
+age                   -0.056254340   -0.014567435  1.000000000   -0.020653352
+training_hours         0.038102814    0.213223626 -0.020653352    1.000000000
+match_intensity       -0.056004739    0.047746426 -0.002487031    0.024869382
+sleep_hours            0.009511588   -0.009584384  0.057785490   -0.001016533
+travel_km_week        -0.044569200   -0.095566982 -0.024826426   -0.103487984
+fatigue               -0.064798747   -0.294289561 -0.022952080   -0.024781872
+strength_1RM          -0.072304348    0.014368416  0.043252441    0.075065530
+agility_time           0.065097072   -0.270118368 -0.075836548    0.009000297
+nutrition_score       -0.017948243    0.068165128  0.061316510    0.015784391
+left_footed           -0.002290794    0.010792863  0.001072423    0.054981161
+previous_injuries     -0.059215842   -0.040318518  0.057127118    0.016374733
+altitude_home          0.027052735   -0.012245360 -0.015085890   -0.048684328
+                  match_intensity  sleep_hours travel_km_week      fatigue
+performance_index     0.105524449  0.140238561   -0.229173294 -0.235047946
+injuries_count       -0.026426679  0.021746277   -0.007683223  0.079240490
+starter               0.081841376  0.020135890   -0.200966251 -0.065515153
+passes_attempted     -0.056004739  0.009511588   -0.044569200 -0.064798747
+passes_success        0.047746426 -0.009584384   -0.095566982 -0.294289561
+age                  -0.002487031  0.057785490   -0.024826426 -0.022952080
+training_hours        0.024869382 -0.001016533   -0.103487984 -0.024781872
+match_intensity       1.000000000  0.065033506   -0.079693916 -0.030713438
+sleep_hours           0.065033506  1.000000000   -0.085058788 -0.038366911
+travel_km_week       -0.079693916 -0.085058788    1.000000000 -0.039727310
+fatigue              -0.030713438 -0.038366911   -0.039727310  1.000000000
+strength_1RM          0.034583244 -0.018360833    0.009829000  0.016890817
+agility_time         -0.034191671  0.021689683    0.046511935 -0.004996277
+nutrition_score      -0.005988961 -0.041943763    0.024525683  0.007531836
+left_footed           0.018102343  0.031790171    0.048178595 -0.016531942
+previous_injuries     0.031758637  0.084312165    0.060747566  0.017443859
+altitude_home         0.034823093 -0.009805810    0.052403040  0.019959785
+                   strength_1RM agility_time nutrition_score   left_footed
+performance_index  0.0265142085 -0.083228135     0.026127294  0.0755400844
+injuries_count    -0.1474725783 -0.106329647    -0.006310515 -0.0139959695
+starter            0.1302413820 -0.017235246    -0.016386628  0.0264970150
+passes_attempted  -0.0723043475  0.065097072    -0.017948243 -0.0022907939
+passes_success     0.0143684158 -0.270118368     0.068165128  0.0107928629
+age                0.0432524407 -0.075836548     0.061316510  0.0010724228
+training_hours     0.0750655296  0.009000297     0.015784391  0.0549811607
+match_intensity    0.0345832442 -0.034191671    -0.005988961  0.0181023434
+sleep_hours       -0.0183608326  0.021689683    -0.041943763  0.0317901707
+travel_km_week     0.0098290001  0.046511935     0.024525683  0.0481785948
+fatigue            0.0168908167 -0.004996277     0.007531836 -0.0165319420
+strength_1RM       1.0000000000 -0.060215946     0.015486838  0.0001416806
+agility_time      -0.0602159457  1.000000000    -0.003290947  0.0361351170
+nutrition_score    0.0154868382 -0.003290947     1.000000000  0.0406846996
+left_footed        0.0001416806  0.036135117     0.040684700  1.0000000000
+previous_injuries -0.0324557564  0.025610597     0.007514404 -0.0034503837
+altitude_home      0.0809435042  0.016062592    -0.013897573 -0.0277691299
+                  previous_injuries altitude_home
+performance_index       0.008145680  -0.065605461
+injuries_count          0.164320068   0.022619805
+starter                -0.009129866   0.009302464
+passes_attempted       -0.059215842   0.027052735
+passes_success         -0.040318518  -0.012245360
+age                     0.057127118  -0.015085890
+training_hours          0.016374733  -0.048684328
+match_intensity         0.031758637   0.034823093
+sleep_hours             0.084312165  -0.009805810
+travel_km_week          0.060747566   0.052403040
+fatigue                 0.017443859   0.019959785
+strength_1RM           -0.032455756   0.080943504
+agility_time            0.025610597   0.016062592
+nutrition_score         0.007514404  -0.013897573
+left_footed            -0.003450384  -0.027769130
+previous_injuries       1.000000000   0.059581765
+altitude_home           0.059581765   1.000000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a visualizarla</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>corrplot 0.95 loaded</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(matriz_cor, <span class="at">method =</span> <span class="st">"color"</span>, <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="at">tl.cex =</span> <span class="fl">0.8</span>, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">addCoef.col =</span> <span class="st">"black"</span>, <span class="at">number.cex =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aquí podemos ver la matriz de correlaciones. Vemos que las variables que presentan más correlación son los pases realizados con éxito y los pases intentados. Otras variables que presentan cierta correlación son el índice de rendimiento con la edad y las horas de entrenamiento.</p>
+</section>
+<section id="gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento" class="level2">
+<h2 class="anchored" data-anchor-id="gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento">7. Gráfico de dispersión entre fatiga e índice de rendimiento</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Representamos un gráfico de dispersión entre training_hours y performance_index</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos, <span class="fu">aes</span>(<span class="at">x =</span> fatigue, <span class="at">y =</span> performance_index)) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relación entre fatiga e índice de rendimiento"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Fatiga"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Índice de rendimiento"</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 5 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 5 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Parece que hay una relación lineal entre ambas variables. En particular, podemos observar que parece haber una relación que indica una menor índice de rendimiento conforme la fatiga incrementa.</p>
+</section>
+<section id="boxplot-del-índice-de-rendimiento-por-posición" class="level2">
+<h2 class="anchored" data-anchor-id="boxplot-del-índice-de-rendimiento-por-posición">8. Boxplot del índice de rendimiento por posición</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Realizamos un boxplot de performance_index por posicion</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(performance_index <span class="sc">~</span> position,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> datos,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Diagrama de Cajas de Performance Index por Posición"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Posición"</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightgreen"</span>, <span class="st">"lightpink"</span>, <span class="st">"khaki"</span>),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"gray40"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">notch =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se aprecian una serie de diferencias entre puestos, que procederemos a desarrollar. En primer lugar, no hay grandes diferencias en lo referente a la media del índice de rendimiento en función de la posición. Por otro lado, vemos que el tercer cuartil de los defensas es más pequeño que el resto, dando a entender que se encuentran más agrupados en esas zonas de rendimiento; destacando menos que en otras posiciones. Además, hay tres outliers con valores muy bajos de rendimiento. Finalmente, el último valor remarcable es el del portero, donde vemos que el “bigote” es de longitud mucho menor que el del resto de posiciones.</p>
+</section>
+<section id="valores-atípicos-en-agility_time" class="level2">
+<h2 class="anchored" data-anchor-id="valores-atípicos-en-agility_time">9. Valores atípicos en <em>agility_time</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vamos a identificar los valores atípicos en agility_time </span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos los cuartiles y el rango intercuartílico</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>agility_time, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>agility_time, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>IQR_value <span class="ot">&lt;-</span> <span class="fu">IQR</span>(datos<span class="sc">$</span>agility_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Límites inferior y superior para detectar atípicos</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>lim_inf <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>lim_sup <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificamos los valores atípicos</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> datos<span class="sc">$</span>agility_time[datos<span class="sc">$</span>agility_time <span class="sc">&lt;</span> lim_inf <span class="sc">|</span> datos<span class="sc">$</span>agility_time <span class="sc">&gt;</span> lim_sup]</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos resultados</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>outliers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA NA NA NA NA</code></pre>
+</div>
+</div>
+<p>Vemos que por la regla del rango intercuartílico (IQR) hay 5 valores atípicos, que se corresponden con NA. Es decir, valores no recogidos de esta variable para ciertos jugadores. Vamos a hacer un boxplot para intentar ver más posibles valores atípicos, donde estos hayan sido recogidos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(datos<span class="sc">$</span>agility_time,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Detección de valores atípicos en Agility Time"</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Agility Time"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"gray40"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La conclusión del boxplot es la misma. No hay valores atípicos en la variable agility_time, más allá de los valores no recogidos.</p>
+</section>
+<section id="proporción-de-jugadores-zurdos-en-la-base-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="proporción-de-jugadores-zurdos-en-la-base-de-datos">10. Proporción de jugadores zurdos en la base de datos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos la proporción de jugadores zurdos</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>proporcion_zurdos <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>left_footed <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos el resultado en porcentaje</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>proporcion_zurdos <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 29.17466</code></pre>
+</div>
+</div>
+<p>Como podemos ver, el 29,17% de los jugadores de la base de datos son zurdos.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

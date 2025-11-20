@@ -1,0 +1,64 @@
+/* ---- Fuentes elegantes ---- */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lato:wght@400;700&display=swap');
+
+/* ---- TÍTULO ÉPICO ---- */
+h1.title {
+  font-family: 'Cinzel', serif;
+  font-size: 3em;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-top: 40px;
+  margin-bottom: 15px;
+
+  /* Degradado dorado elegante */
+  background: linear-gradient(90deg, #05050F, #282878);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Sombra sutil y animación */
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25),
+               0 0 25px rgba(184, 134, 11, 0.3);
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* ---- AUTOR ÉPICO ---- */
+.author {
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+  font-size: 1.3em;
+  letter-spacing: 1.5px;
+  margin-bottom: 40px;
+  font-weight: 600;
+
+  /* Degradado metálico dorado suave */
+  background: linear-gradient(90deg, #c0a060, #f7d794);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Efecto de brillo ligero */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+
+  /* Entrada animada desde abajo */
+  animation: authorFade 2.5s ease-in-out;
+}
+
+/* ---- Animaciones ---- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes authorFade {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo{
+  position: absolute;
+  top:20px;
+  right:10px;
+  width:200px;
+}
+
