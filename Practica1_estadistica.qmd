@@ -296,9 +296,10 @@ colnames(datos)[colSums(is.na(datos)) > 0]
 
 
 ```
+
 Las variables *training_hours*, *sleep_hours*, *fatigue*, *strength_1RM* y *agility_time* tienen valores faltantes.
 
-Ahora, veremos cuántos valores faltan en cada una 
+Ahora, veremos cuántos valores faltan en cada una
 
 ```{r}
 # Cantidad de NA solo en columnas donde hay al menos uno
@@ -307,6 +308,7 @@ na_counts[na_counts > 0]
 
 
 ```
+
 Así, vemos que hay 5 valores faltantes en cada una de estas variables.
 
 ## 2. Calculamos la proporción de valores faltantes sobre el dataset completo
@@ -408,7 +410,6 @@ hist(sleep_imputada,
 
 Como podemos ver, no se aprecian diferencias aparentes. Esto se debe al hecho de que, al imputar los valores faltantes por la media, no modificamos la estructura presente de la variable. Así, el único cambio aparente es un aumento de la frecuencia para los valores cercanos a la mediana (asumimos que son los imputados). Sin embargo, como afirmamos, la distribución es la misma.
 
-
 ## 6. Imputación por la mediana en *fatigue* y comparación con imputación con la media.
 
 En primer lugar, imputamos los valores por la mediana en la variable *fatigue*.
@@ -477,7 +478,7 @@ data.frame(
 
 ```
 
-De esta manera, vemos que la imputación por la mediana modifica ligeramente la media de la variable; mientras que el valor de la mediana permanece intacto en cualquier caso. 
+De esta manera, vemos que la imputación por la mediana modifica ligeramente la media de la variable; mientras que el valor de la mediana permanece intacto en cualquier caso.
 
 Vamos a ver si este cambio es significativo. Para ello, haremos un *t-test*, cuya hipótesis nula será que el cambio no es significativo.
 
@@ -504,7 +505,6 @@ t.test(original, imputada_mediana[1:length(original)], paired = TRUE)
 
 El p-valor resulta muy elevado, por lo que no podemos rechazar la hipótesis nula. De esta manera, concluimos que la diferencia no es estadísticamente significativa.
 
-
 A continuación, haremos una comparación de histogramas, para ver si a nivel visual hay una diferencia apreciable.
 
 ```{r}
@@ -519,7 +519,7 @@ hist(fatigue_imputada_media, main = "Imputación Media", xlab = "Fatigue", col =
 
 ```
 
-Como se puede ver, a nivel visual apenas hay diferencia. Simplemente, en ambas imputaciones,la barra que abarca los valores de la mediana incrementa (ya que la media es próxima a la mediana), pero mantienen la estructura. 
+Como se puede ver, a nivel visual apenas hay diferencia. Simplemente, en ambas imputaciones,la barra que abarca los valores de la mediana incrementa (ya que la media es próxima a la mediana), pero mantienen la estructura.
 
 Así, concluimos que apenas hay diferencias entre ambas imputaciones.
 
@@ -578,7 +578,7 @@ Vemos que los valores coinciden, por lo que la imputación ha sido realizada de 
 
 ## 8. Comentario acerca de los valores faltantes
 
-En primer lugar, para ello, vamos a ver el patrón de los NA. Es decir, vamos a ver dónde aparecen los NA, si hay combinaciones de NA entre variables o si aparecen de forma aleatoria. 
+En primer lugar, para ello, vamos a ver el patrón de los NA. Es decir, vamos a ver dónde aparecen los NA, si hay combinaciones de NA entre variables o si aparecen de forma aleatoria.
 
 ```{r}
 
@@ -588,7 +588,7 @@ aggr(datos, prop = TRUE, numbers = TRUE)
 
 ```
 
-Como podemos apreciar, no hay NA agrupados en la misma observación. Por tanto, podemos intuir que los valores faltantes son fruto del azar (MCAR). Por tanto, nos ayudaremos de un test estadístico que nos diga si lo son (el test mcar). 
+Como podemos apreciar, no hay NA agrupados en la misma observación. Por tanto, podemos intuir que los valores faltantes son fruto del azar (MCAR). Por tanto, nos ayudaremos de un test estadístico que nos diga si lo son (el test mcar).
 
 ```{r}
 # Visualizar proporción de NA por variable
@@ -602,8 +602,7 @@ mcar_test(datos)
 
 ```
 
-
-Como el p-valor es mayor de 0.05, no podemos rechazar que sean MCAR. 
+Como el p-valor es mayor de 0.05, no podemos rechazar que sean MCAR.
 
 Con esto y la información anterior, podemos concluir que los valores faltantes que tenemos son MCAR, al provenir completamente del azar.
 
@@ -619,6 +618,7 @@ summary(modelo)
 
 
 ```
+
 Como tenemos un modelo con 514 grados de libertad, es fácil deducir que se han perdido 5 observaciones por NA.
 
 A continuación, vamos a ver qué filas se han perdido exactamente.
@@ -636,6 +636,7 @@ filas_perdidas
 
 
 ```
+
 ## 10. Modelo lineal con valores imputados
 
 ```{r}
@@ -662,7 +663,7 @@ coef(modelo_imputado)
 
 ```
 
-Los coeficientes han cambiado ligeramente, al cambiar el número de observaciones, con valores añadidos manualmente. Sin embargo, la diferencia es mínima, al haber muy pocos valores faltantes, por lo que los cambios no influyen prácticamente en el modelo; ya que los coeficientes cambian mínimamente. 
+Los coeficientes han cambiado ligeramente, al cambiar el número de observaciones, con valores añadidos manualmente. Sin embargo, la diferencia es mínima, al haber muy pocos valores faltantes, por lo que los cambios no influyen prácticamente en el modelo; ya que los coeficientes cambian mínimamente.
 
 # 3. REGRESIÓN LINEAL SIMPLE Y MÚLTIPLE
 
@@ -701,15 +702,19 @@ legend("topleft", legend = c("Datos", "Recta modelo imputado"),
 
 ```
 
-## 3. Cálculo y análisis del R^2 del modelo
+## 3. Cálculo y análisis del R\^2 del modelo
 
-En primer lugar, calcularemos el R^2 del modelo.
+En primer lugar, calcularemos el R\^2 del modelo.
 
 ```{r}
 
 # R^2 del modelo imputado
 summary(modelo_imputado)$r.squared
 
+# cacafuti
 
 ```
-El R^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la variabilidad del índice de rendimiento.
+
+El R\^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la variabilidad del índice de rendimiento.
+
+
