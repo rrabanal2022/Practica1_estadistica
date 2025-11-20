@@ -711,10 +711,96 @@ En primer lugar, calcularemos el R\^2 del modelo.
 # R^2 del modelo imputado
 summary(modelo_imputado)$r.squared
 
-# cacafuti
-
 ```
 
 El R\^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la variabilidad del índice de rendimiento.
+
+## 4. Modelo de regresión lineal múltiple
+
+Vamos a ajustar un modelo de regresión lineal múltiple con la variable *performance_index* explicada a partir de *training_hours*, *match_intensity* y *strength_1RM*.
+
+```{r}
+
+# Ajustar modelo lineal múltiple
+modelo_multiple <- lm(performance_index ~ training_hours + match_intensity + strength_1RM, data = datos, na.action = na.omit)
+
+# Resumen del modelo
+summary(modelo_multiple)
+
+
+```
+La variable que más efecto tiene sobre el rendimiento es *training_hours*, cuyo coeficiente asociado vale 1.7253 (mucho mayor que el valor absoluto del resto).
+
+## 5. Comparación con el modelo simple
+
+```{r}
+
+# Coeficiente del modelo simple
+coef_simple <- coef(modelo)["training_hours"]
+coef_simple
+
+# Coeficiente del modelo múltiple
+coef_multiple <- coef(modelo_multiple)["training_hours"]
+coef_multiple
+
+# Intercepto del modelo simple
+intercepto_simple <- coef(modelo)["(Intercept)"]
+intercepto_simple
+
+# Intercepto del modelo múltiple
+intercepto_multiple <- coef(modelo_multiple)["(Intercept)"]
+intercepto_multiple
+
+```
+Vemos, de esta manera, que el coeficiente de la variable *training_hours* aumenta en el modelo múltiple y el intercepto disminuye su valor.
+
+Esto se debe a que los coeficientes asociados a las otras variables le restan valor a las horas de entrenamientos, ajustándose así a la realidad que permite explicar el modelo. Por otro lado, tiene sentido que el intercepto sea menor, ya que la pendiente parece más pronunciada por este incremento del coeficiente asociado a la variable *training_hours*.
+
+## 6. Adición de la variable *fatigue*
+
+```{r}
+
+# Ajustar modelo múltiple con fatigue
+modelo_multiple2 <- lm(performance_index ~ training_hours + match_intensity + strength_1RM + fatigue, data = datos, na.action = na.omit)
+
+# Resumen del modelo
+summary(modelo_multiple2)
+
+
+```
+El R^2 ajustado ha mejorado tras añadir esta nueva variable al modelo. Esto significa que es útil, ya que el hecho de haberla añadido permite explicar cierta variabilidad del índice de rendimiento.
+
+
+## 7. Efecto de la variable *position*
+
+Si metemos la variable categórica *position* en un modelo de regresión lineal múltiple con predictores cuantitativos, la variable categórica se convierte en valores Dummy de la siguiente manera: 
+
+
+```{r}
+
+# Limpiar la variable
+datos$position <- factor(trimws(tolower(datos$position)))
+
+# Crear dummies
+dummy_matrix <- model.matrix(~ position, data = datos)
+dummy_df <- as.data.frame(dummy_matrix[, -1])
+
+# Tabla de correspondencia: un nivel por fila
+tabla_correspondencia <- unique(cbind(position = datos$position, dummy_df))
+tabla_correspondencia
+
+
+
+
+```
+
+En este caso, se habrían estimado estos coeficientes Dummy para las posiciones.
+
+El que tiene todo 0 es la referencia (en este caso, los defensas). El resto de coeficientes Dummy se comparan con este nivel.
+
+El modelo devolverá un valor entre la diferencia de posiciones, que permite determinar la diferencia de rendimiento entre jugadores de las mismas.
+
+## 8. Incluimos *sleep_hours* como predictor adicional
+
 
 
