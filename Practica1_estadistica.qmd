@@ -24,6 +24,7 @@ library(mice)
 library(VIM)
 library(naniar)
 library(car)
+library(splines)
 
 ```
 
@@ -840,11 +841,11 @@ De esta manera, nos conviene usar un modelo simple para ver cómo influye una va
 
 # Creamos el modelo lineal y el cuadrático
 
-modelo_lineal <- lm(performance_index ~ training_hours, data = datos)
-summary(modelo_lineal)
+modelo_lineal_training <- lm(performance_index ~ training_hours, data = datos)
+summary(modelo_lineal_training)
 
-modelo_cuadratico <- lm(performance_index ~ training_hours + I(training_hours^2), data = datos)
-summary(modelo_cuadratico)
+modelo_cuadratico_training <- lm(performance_index ~ training_hours + I(training_hours^2), data = datos)
+summary(modelo_cuadratico_training)
 
 
 ```
@@ -853,7 +854,7 @@ A continuación, compararemos los modelos con ANOVA, con R^2 ajustado y con AIC
 
 ```{r}
 
-anova(modelo_lineal, modelo_cuadratico)
+anova(modelo_lineal_training, modelo_cuadratico_training)
 
 
 ```
@@ -862,8 +863,8 @@ Vemos que el p-valor del test es bastante menor que 0.05, lo cual indica que el 
 
 ```{r}
 
-summary(modelo_lineal)$adj.r.squared
-summary(modelo_cuadratico)$adj.r.squared
+summary(modelo_lineal_training)$adj.r.squared
+summary(modelo_cuadratico_training)$adj.r.squared
 
 
 ```
@@ -872,7 +873,7 @@ Vemos que el R^2 del modelo cuadrático es mayor que el del modelo lineal, por l
 
 ```{r}
 
-AIC(modelo_lineal, modelo_cuadratico)
+AIC(modelo_lineal_training, modelo_cuadratico_training)
 
 ```
 
@@ -1013,10 +1014,127 @@ ggplot(datos, aes(x = fatigue, y = performance_index)) +
 
 Podemos ver en la gráfica que la relación planteada es no lineal, con dos pequeños "picos" y un "valle" entre medias, y una posterior caída. 
 
+## 5. Spline sobre *training_hours* y comparación con método cuadrático
+
+```{r}
 
 
+# Ajustamos un spline cúbico con 4 knots por defecto
+modelo_spline <- lm(performance_index ~ bs(training_hours, df = 4), data = datos)
+summary(modelo_spline)
 
 
+```
+A continuación, graficaremos ambos modelos para ver la diferencia
+
+```{r}
+
+library(ggplot2)
+
+ggplot(datos, aes(x = training_hours, y = performance_index)) +
+  geom_point(color = "blue", alpha = 0.6) +  # puntos de datos
+  stat_smooth(aes(color = "Cuadrático"), method = "lm", formula = y ~ poly(x, 2), se = FALSE, linetype = "dashed", size = 1) +
+  stat_smooth(aes(color = "Spline"), method = "lm", formula = y ~ bs(x, 4), se = FALSE, size = 1) +
+  scale_color_manual(name = "Modelo", values = c("Cuadrático" = "red", "Spline" = "darkgreen")) +
+  labs(title = "Comparación: Modelo cuadrático vs Spline",
+       x = "Training Hours", y = "Performance Index") +
+  theme_minimal()
+
+
+```
+
+
+Vemos que el spline recoge mejor la no linealidad de la relación, ajustándose mejor a los valores reales. 
+
+Por otro lado, vamos a comparar formalmente ambos ajustes.
+
+
+```{r}
+
+# AIC
+AIC(modelo_cuadratico_training, modelo_spline)
+
+# R² ajustado
+summary(modelo_cuadratico_training)$adj.r.squared
+summary(modelo_spline)$adj.r.squared
+
+
+```
+
+Vemos que el AIC del modelo cuadrático es algo mayor, por lo que se ajusta un poco mejor a la relación. Sin embargo, el R^2 del modelo spline es mayor, explicando más variabilidad.
+
+La conclusión que podemos sacar es que ambos modelos son muy similares, explicando una variabilidad parecida. De esta manera, no parece que uno sea mucho mejor que el otro.
+
+
+## 6. Piecewise en travel_km_week
+
+En primer lugar, vamos a crear la variable dicotómica *travel_group*.
+
+```{r}
+
+datos$travel_group <- ifelse(datos$travel_km_week <= 1500, "≤1500", ">1500")
+
+datos$travel_group <- factor(datos$travel_group, levels = c("≤1500", ">1500"))
+
+
+```
+
+A continuación, ajustaremos el modelo lineal con esta variable.
+
+```{r}
+
+modelo_piecewise <- lm(performance_index ~ travel_group, data = datos)
+summary(modelo_piecewise)
+
+```
+
+Con la salida del modelo, vemos que el índice de rendimiento disminuye para aquellos jugadores que han viajado más de 1500 km a la semana. Esto se puede comprobar ya que el coeficiente asociado a esta variable es negativo (-5.9998). El valor de este coeficiente será la diferencia con los jugadores pertenecientes al otro grupo.
+
+Finalmente, dispondremos un boxplot para ver la diferencia de manera visual.
+
+```{r}
+
+boxplot(performance_index ~ travel_group, data = datos,
+        xlab = "Distancia semanal de viaje",
+        ylab = "Performance Index",
+        main = "Rendimiento según travel_km_week",
+        col = c("lightblue", "lightgreen"))
+
+
+```
+
+## 7. Evaluación del AIC entre modelos lineal, cuadrático y piecewise para *training_hours*
+
+Tenemos el modelo lineal y el cuadrático creados en anteriores apartados. Nos falta, por tanto, crear el modelo piecewise.
+
+Para ello, en primer lugar crearemos la variable dicotómica *training_group*.
+
+```{r}
+
+datos$training_group <- ifelse(datos$training_hours <= 20, "≤20", ">20")
+datos$training_group <- factor(datos$training_group, levels = c("≤20", ">20"))
+
+
+```
+
+Con esta, creamos el modelo piecewise
+
+```{r}
+
+modelo_piecewise_training <- lm(performance_index ~ training_group, data = datos)
+
+```
+
+
+Ahora, podremos comparar el AIC de estos modelos
+
+```{r}
+
+AIC(modelo_lineal_training, modelo_cuadratico_training, modelo_piecewise_training)
+
+```
+
+El modelo piecewise es el de mayor AIC, mientras que el cuadrático es el de menor AIC. De esta manera, el mejor modelo será el cuadrático, ya que es el que mejor combina ajuste y simplicidad.
 
 
 
