@@ -729,6 +729,7 @@ summary(modelo_multiple)
 
 
 ```
+
 La variable que más efecto tiene sobre el rendimiento es *training_hours*, cuyo coeficiente asociado vale 1.7253 (mucho mayor que el valor absoluto del resto).
 
 ## 5. Comparación con el modelo simple
@@ -752,6 +753,7 @@ intercepto_multiple <- coef(modelo_multiple)["(Intercept)"]
 intercepto_multiple
 
 ```
+
 Vemos, de esta manera, que el coeficiente de la variable *training_hours* aumenta en el modelo múltiple y el intercepto disminuye su valor.
 
 Esto se debe a que los coeficientes asociados a las otras variables le restan valor a las horas de entrenamientos, ajustándose así a la realidad que permite explicar el modelo. Por otro lado, tiene sentido que el intercepto sea menor, ya que la pendiente parece más pronunciada por este incremento del coeficiente asociado a la variable *training_hours*.
@@ -768,13 +770,12 @@ summary(modelo_multiple2)
 
 
 ```
-El R^2 ajustado ha mejorado tras añadir esta nueva variable al modelo. Esto significa que es útil, ya que el hecho de haberla añadido permite explicar cierta variabilidad del índice de rendimiento.
 
+El R\^2 ajustado ha mejorado tras añadir esta nueva variable al modelo. Esto significa que es útil, ya que el hecho de haberla añadido permite explicar cierta variabilidad del índice de rendimiento.
 
 ## 7. Efecto de la variable *position*
 
-Si metemos la variable categórica *position* en un modelo de regresión lineal múltiple con predictores cuantitativos, la variable categórica se convierte en valores Dummy de la siguiente manera: 
-
+Si metemos la variable categórica *position* en un modelo de regresión lineal múltiple con predictores cuantitativos, la variable categórica se convierte en valores Dummy de la siguiente manera:
 
 ```{r}
 
@@ -801,6 +802,221 @@ El que tiene todo 0 es la referencia (en este caso, los defensas). El resto de c
 El modelo devolverá un valor entre la diferencia de posiciones, que permite determinar la diferencia de rendimiento entre jugadores de las mismas.
 
 ## 8. Incluimos *sleep_hours* como predictor adicional
+
+```{r}
+
+modelo_multiple3 <- lm(performance_index ~ training_hours + match_intensity +
+                         strength_1RM + fatigue + sleep_hours,
+                       data = datos)
+summary(modelo_multiple3)
+
+```
+
+Con esto, podemos ver que la fatiga influye negativamente en el rendimiento de los jugadores. De esta manera, el descanso será necesario para obtener un buen rendimiento.
+
+## 9. Diagrama de residuos del modelo múltiple
+
+```{r}
+
+plot(modelo_multiple3, which = 1)
+
+
+```
+
+
+Los puntos aparecen dispersos aparentemente al azar en torno a la línea central. Este es un indicio de linealidad, por lo que no hay ningún motivo aparente como para descartarla. Es verdad que hay un ligero indicio de curva, pero no lo suficiente como para tomar la conclusión de descartar la linealidad.
+
+## 10. Modelo lineal simple vs múltiple
+
+Para este dataset, conviene más utilizar un modelo lineal simple cuando se quiere ver de forma "pura" el efecto de una sola variable para el explicar el rendimiento o cualquier otra variable. Sin embargo, si queremos explicar el por qué de una variable o de su distribución, esto no se va a deber solo a un predictor, sino que habrá que tomar varios que lo expliquen. 
+
+De esta manera, nos conviene usar un modelo simple para ver cómo influye una variable en las demás, pero nos conviene usar un modelo múltiple para entender el comportamiento real de una variable a partir de las demás (y que se recoja mejor toda su variabilidad, atendiendo a todos sus posibles condicionantes que la alteren).
+
+# 4. NO LINEALIDADES Y PIECEWISE
+
+## 1. Modelo no lineal
+
+```{r}
+
+# Creamos el modelo lineal y el cuadrático
+
+modelo_lineal <- lm(performance_index ~ training_hours, data = datos)
+summary(modelo_lineal)
+
+modelo_cuadratico <- lm(performance_index ~ training_hours + I(training_hours^2), data = datos)
+summary(modelo_cuadratico)
+
+
+```
+
+A continuación, compararemos los modelos con ANOVA, con R^2 ajustado y con AIC
+
+```{r}
+
+anova(modelo_lineal, modelo_cuadratico)
+
+
+```
+
+Vemos que el p-valor del test es bastante menor que 0.05, lo cual indica que el modelo cuadrático es mejor, ya que explica mejor la varianza en el modelo.
+
+```{r}
+
+summary(modelo_lineal)$adj.r.squared
+summary(modelo_cuadratico)$adj.r.squared
+
+
+```
+
+Vemos que el R^2 del modelo cuadrático es mayor que el del modelo lineal, por lo que hay más porcentaje de variabilidad explicada de la variable *performance_index* en el modelo cuadrátrico.
+
+```{r}
+
+AIC(modelo_lineal, modelo_cuadratico)
+
+```
+
+Vemos que en el modelo cuadrático hay un valor menor de AIC. Esto implica que será un mejor modelo, logrando un mejor ajuste que el modelo lineal sin añadir excesiva complejidad.
+
+Con todo esto, podemos concluir que el modelo cuadrático es notablemente mejor que el modelo lineal.
+
+## 2. Relación entre *performance_index* y *age*
+
+En primer lugar, haremos un gráfico de dispersión para ver la relación
+
+```{r}
+
+plot(datos$age, datos$performance_index,
+     xlab = "Edad",
+     ylab = "Performance Index",
+     main = "Relación entre Performance y Edad",
+     pch = 19, col = "blue")
+
+
+```
+
+Esto nos permite intuir que el índice de rendimiento parece ser mayor conforme la edad aumenta. Sin embargo, para verificarlo y detectar formas cuadráticas, haremos un modelo cuadrático.
+
+```{r}
+
+modelo_age <- lm(performance_index ~ age + I(age^2), data = datos)
+summary(modelo_age)
+
+
+```
+Efectivamente, tal y como intuíamos, el índice de rendimiento incrementa conforme la edad aumenta.
+
+Además, vemos que *age^2* es negativo en el modelo. Con esto, sabemos que obtendremos un pico en el modelo. Para verlo mejor, añadiremos al gráfico anterior la curva del modelo cuadrático.
+
+```{r}
+
+plot(datos$age, datos$performance_index,
+     xlab = "Edad",
+     ylab = "Performance Index",
+     main = "Relación entre Performance y Edad",
+     pch = 19, col = "blue")
+
+age_seq <- seq(min(datos$age), max(datos$age), length.out = 100)
+pred <- predict(modelo_age, newdata = data.frame(age = age_seq))
+
+lines(age_seq, pred, col = "red", lwd = 2)
+
+
+```
+
+Así, la relación es cuadrática, aunque parece tener una tendencia suave; no muy pronunciada. Vamos a calcular el valor del pico y lo añadiremos a la gráfica anterior.
+
+```{r}
+
+beta <- coef(modelo_age)
+age_pico <- -beta["age"] / (2 * beta["I(age^2)"])
+age_pico
+
+
+```
+Así, el pico de rendimiento se da a los 31.80029 años. A partir de entonces, el rendimiento empieza a bajar. A continuación aparece el gráfico completo con el pico marcado.
+
+```{r}
+
+# Gráfico de dispersión
+plot(datos$age, datos$performance_index,
+     xlab = "Edad",
+     ylab = "Performance Index",
+     main = "Rendimiento vs Edad con Curva Cuadrática",
+     pch = 19, col = "blue")
+
+# Agregar la curva cuadrática ajustada
+lines(age_seq, pred, col = "red", lwd = 2)
+
+# Marcar el pico en el gráfico
+points(age_pico, performance_pico, col = "black", pch = 19, cex = 1.5)
+text(age_pico, performance_pico, 
+     labels = paste0(round(age_pico, 1), " años"), 
+     pos = 3, col = "black")
+
+
+```
+
+## 3. Variable dicotómica para *sleep_hours*
+
+```{r}
+
+# Creamos sleep_group: 0 = <6h, 1 = ≥6h
+datos$sleep_group <- ifelse(datos$sleep_hours < 6, 0, 1)
+
+# Convertir a factor para que R lo trate como categoría
+datos$sleep_group <- factor(datos$sleep_group, labels = c("<6h", "≥6h"))
+
+
+```
+
+Una vez creada la variable, la ajustaremos como predictora del modelo
+
+```{r}
+
+modelo_sueño <- lm(performance_index ~ sleep_group, data = datos)
+summary(modelo_sueño)
+
+```
+Analizando la salida, vemos que los jugadores que han dormido más de 6 horas incrementan su rendimiento. El intercepto indica la media de rendimiento de jugadores con menos de 6 horas de sueño, mientras que el otro coeficiente (2.436) indica la diferencia entre los jugadores que han dormido más de 6 horas con respecto de aquellos que no. De esta manera, un mayor descanso deriva en un mejor rendimiento.
+
+Por último, vamos a plantear un boxplot para visualizar mejor esta diferencia.
+
+```{r}
+
+boxplot(performance_index ~ sleep_group, data = datos,
+        xlab = "Horas de sueño",
+        ylab = "Performance Index",
+        main = "Rendimiento según horas de sueño",
+        col = c("lightblue", "lightgreen"))
+
+
+```
+
+## 4. *performance_index* frente a *fatigue* empleando un LOESS
+
+```{r}
+
+library(ggplot2)
+
+ggplot(datos, aes(x = fatigue, y = performance_index)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "loess", color = "red", se = TRUE) +
+  labs(title = "Rendimiento vs Fatigue con LOESS",
+       x = "Fatigue",
+       y = "Performance Index") +
+  theme_minimal()
+
+
+```
+
+
+Podemos ver en la gráfica que la relación planteada es no lineal, con dos pequeños "picos" y un "valle" entre medias, y una posterior caída. 
+
+
+
+
+
 
 
 

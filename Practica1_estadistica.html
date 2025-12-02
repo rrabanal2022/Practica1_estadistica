@@ -96,6 +96,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#valores-atípicos-en-agility_time" id="toc-valores-atípicos-en-agility_time" class="nav-link" data-scroll-target="#valores-atípicos-en-agility_time">9. Valores atípicos en <em>agility_time</em></a></li>
   <li><a href="#proporción-de-jugadores-zurdos-en-la-base-de-datos" id="toc-proporción-de-jugadores-zurdos-en-la-base-de-datos" class="nav-link" data-scroll-target="#proporción-de-jugadores-zurdos-en-la-base-de-datos">10. Proporción de jugadores zurdos en la base de datos</a></li>
   </ul></li>
+  <li><a href="#manejo-de-valores-faltantes" id="toc-manejo-de-valores-faltantes" class="nav-link" data-scroll-target="#manejo-de-valores-faltantes">2. MANEJO DE VALORES FALTANTES</a>
+  <ul class="collapse">
+  <li><a href="#identificación-de-variables-con-valores-faltantes" id="toc-identificación-de-variables-con-valores-faltantes" class="nav-link" data-scroll-target="#identificación-de-variables-con-valores-faltantes">1. Identificación de variables con valores faltantes</a></li>
+  <li><a href="#calculamos-la-proporción-de-valores-faltantes-sobre-el-dataset-completo" id="toc-calculamos-la-proporción-de-valores-faltantes-sobre-el-dataset-completo" class="nav-link" data-scroll-target="#calculamos-la-proporción-de-valores-faltantes-sobre-el-dataset-completo">2. Calculamos la proporción de valores faltantes sobre el dataset completo</a></li>
+  <li><a href="#resumen-de-combina-las-variables-con-missing-y-su-porcentaje-de-valores-ausentes" id="toc-resumen-de-combina-las-variables-con-missing-y-su-porcentaje-de-valores-ausentes" class="nav-link" data-scroll-target="#resumen-de-combina-las-variables-con-missing-y-su-porcentaje-de-valores-ausentes">3. Resumen de combina las variables con missing y su porcentaje de valores ausentes</a></li>
+  <li><a href="#imputación-por-la-media-en-training_hours" id="toc-imputación-por-la-media-en-training_hours" class="nav-link" data-scroll-target="#imputación-por-la-media-en-training_hours">4. Imputación por la media en <em>training_hours</em></a></li>
+  <li><a href="#histogramas-de-sleep_hours-antes-y-después-de-la-imputación-por-la-media" id="toc-histogramas-de-sleep_hours-antes-y-después-de-la-imputación-por-la-media" class="nav-link" data-scroll-target="#histogramas-de-sleep_hours-antes-y-después-de-la-imputación-por-la-media">5. Histogramas de <em>sleep_hours</em> antes y después de la imputación por la media</a></li>
+  <li><a href="#imputación-por-la-mediana-en-fatigue-y-comparación-con-imputación-con-la-media." id="toc-imputación-por-la-mediana-en-fatigue-y-comparación-con-imputación-con-la-media." class="nav-link" data-scroll-target="#imputación-por-la-mediana-en-fatigue-y-comparación-con-imputación-con-la-media.">6. Imputación por la mediana en <em>fatigue</em> y comparación con imputación con la media.</a></li>
+  <li><a href="#imputación-condicional-en-strength_1rm" id="toc-imputación-condicional-en-strength_1rm" class="nav-link" data-scroll-target="#imputación-condicional-en-strength_1rm">7. Imputación condicional en <em>strength_1RM</em></a></li>
+  <li><a href="#comentario-acerca-de-los-valores-faltantes" id="toc-comentario-acerca-de-los-valores-faltantes" class="nav-link" data-scroll-target="#comentario-acerca-de-los-valores-faltantes">8. Comentario acerca de los valores faltantes</a></li>
+  <li><a href="#modelo-lineal-simple-entre-performance_index-y-training_hours" id="toc-modelo-lineal-simple-entre-performance_index-y-training_hours" class="nav-link" data-scroll-target="#modelo-lineal-simple-entre-performance_index-y-training_hours">9. Modelo lineal simple entre <em>performance_index</em> y <em>training_hours</em></a></li>
+  <li><a href="#modelo-lineal-con-valores-imputados" id="toc-modelo-lineal-con-valores-imputados" class="nav-link" data-scroll-target="#modelo-lineal-con-valores-imputados">10. Modelo lineal con valores imputados</a></li>
+  </ul></li>
+  <li><a href="#regresión-lineal-simple-y-múltiple" id="toc-regresión-lineal-simple-y-múltiple" class="nav-link" data-scroll-target="#regresión-lineal-simple-y-múltiple">3. REGRESIÓN LINEAL SIMPLE Y MÚLTIPLE</a>
+  <ul class="collapse">
+  <li><a href="#modelo-de-regresión-lineal-simple-entre-performance_index-y-training_hours" id="toc-modelo-de-regresión-lineal-simple-entre-performance_index-y-training_hours" class="nav-link" data-scroll-target="#modelo-de-regresión-lineal-simple-entre-performance_index-y-training_hours">1. Modelo de regresión lineal simple entre <em>performance_index</em> y <em>training_hours</em></a></li>
+  <li><a href="#gráfico-de-dispersión-del-modelo" id="toc-gráfico-de-dispersión-del-modelo" class="nav-link" data-scroll-target="#gráfico-de-dispersión-del-modelo">2. Gráfico de dispersión del modelo</a></li>
+  <li><a href="#cálculo-y-análisis-del-r2-del-modelo" id="toc-cálculo-y-análisis-del-r2-del-modelo" class="nav-link" data-scroll-target="#cálculo-y-análisis-del-r2-del-modelo">3. Cálculo y análisis del R^2 del modelo</a></li>
+  <li><a href="#modelo-de-regresión-lineal-múltiple" id="toc-modelo-de-regresión-lineal-múltiple" class="nav-link" data-scroll-target="#modelo-de-regresión-lineal-múltiple">4. Modelo de regresión lineal múltiple</a></li>
+  <li><a href="#comparación-con-el-modelo-simple" id="toc-comparación-con-el-modelo-simple" class="nav-link" data-scroll-target="#comparación-con-el-modelo-simple">5. Comparación con el modelo simple</a></li>
+  <li><a href="#adición-de-la-variable-fatigue" id="toc-adición-de-la-variable-fatigue" class="nav-link" data-scroll-target="#adición-de-la-variable-fatigue">6. Adición de la variable <em>fatigue</em></a></li>
+  <li><a href="#efecto-de-la-variable-position" id="toc-efecto-de-la-variable-position" class="nav-link" data-scroll-target="#efecto-de-la-variable-position">7. Efecto de la variable <em>position</em></a></li>
+  <li><a href="#incluimos-sleep_hours-como-predictor-adicional" id="toc-incluimos-sleep_hours-como-predictor-adicional" class="nav-link" data-scroll-target="#incluimos-sleep_hours-como-predictor-adicional">8. Incluimos <em>sleep_hours</em> como predictor adicional</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -131,11 +155,98 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="logo.png" class="logo"></p>
 <section id="exploración-inicial" class="level1">
 <h1>1. EXPLORACIÓN INICIAL</h1>
+<p>Antes de empezar, cargamos las librerías que vamos a usar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'mice' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'mice'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    cbind, rbind</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'VIM' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: colorspace</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'colorspace' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: grid</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>VIM is ready to use.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'VIM'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:datasets':
+
+    sleep</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'naniar' was built under R version 4.5.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'car' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'carData' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+</div>
 <p>Empezaremos planteando una visualización de los datos, para entender la naturaleza de las variables y ver los valores con los que trabajaremos.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"athletics_B.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"athletics_B.csv"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> performance_index injuries_count      starter        passes_attempted
  Min.   :27.27     Min.   :0.0000   Min.   :0.00000   Min.   : 10.00  
@@ -178,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  Max.   :1.0000   Max.   :29.000    Max.   :1445.0  
                                                     </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   521 obs. of  19 variables:
  $ performance_index: num  64.4 65.7 70.2 58.1 73.3 ...
@@ -207,33 +318,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="media-medianay-desviación-típica">1. Media, medianay desviación típica</h2>
 <p>En primer lugar, calcularemos la media, la mediana y la desviación típica del índice de rendimiento de los jugadores.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la media del índice de rendimiento de los jugadores</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>media_performance <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>media_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la media del índice de rendimiento de los jugadores</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>media_performance <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>media_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 59.23209</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la mediana del índice de rendimiento de los jugadores</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mediana_performance <span class="ot">&lt;-</span> <span class="fu">median</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>mediana_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la mediana del índice de rendimiento de los jugadores</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>mediana_performance <span class="ot">&lt;-</span> <span class="fu">median</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>mediana_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 59.93</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la desviación típica del índice de rendimiento de los jugadores</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>dtip_performance <span class="ot">&lt;-</span> <span class="fu">sd</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>dtip_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la desviación típica del índice de rendimiento de los jugadores</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>dtip_performance <span class="ot">&lt;-</span> <span class="fu">sd</span>(datos<span class="sc">$</span>performance_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Devolvemos el valor calculado</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>dtip_performance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9.784195</code></pre>
 </div>
@@ -243,33 +354,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="histograma-de-la-variable-performance_index" class="level2">
 <h2 class="anchored" data-anchor-id="histograma-de-la-variable-performance_index">2. Histograma de la variable <em>performance_index</em></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a hacer un histograma del índice de rendimiento de los jugadores en 20 intervalos</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma de performance_index con 20 intervalos</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(datos<span class="sc">$</span>performance_index,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>,            </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Histograma de Performance Index"</span>,  </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Performance Index"</span>,                </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Frecuencia"</span>,                       </span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"skyblue"</span>,                           </span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"white"</span>,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(datos<span class="sc">$</span>performance_index),</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"red"</span>,</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="dv">2</span>)  </span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>cuartiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>performance_index, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadimos líneas verticales discontinuas en los cuartiles</span></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> cuartiles, </span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"darkgreen"</span>, </span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="dv">2</span>,      <span class="co"># tipo de línea discontinua</span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)      <span class="co"># grosor</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a hacer un histograma del índice de rendimiento de los jugadores en 20 intervalos</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma de performance_index con 20 intervalos</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(datos<span class="sc">$</span>performance_index,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>,            </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Histograma de Performance Index"</span>,  </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Performance Index"</span>,                </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Frecuencia"</span>,                       </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"skyblue"</span>,                           </span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"white"</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">freq =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(datos<span class="sc">$</span>performance_index),</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="dv">2</span>)  </span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>cuartiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>performance_index, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadimos líneas verticales discontinuas en los cuartiles</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> cuartiles, </span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"darkgreen"</span>, </span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="dv">2</span>,      <span class="co"># tipo de línea discontinua</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)      <span class="co"># grosor</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -281,21 +392,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="distribución-de-frecuencias-relativas" class="level2">
 <h2 class="anchored" data-anchor-id="distribución-de-frecuencias-relativas">3. Distribución de frecuencias relativas</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a calcular la distribución de las frecuencias relativas de los jugadores por posición</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>frecuencia <span class="ot">&lt;-</span> <span class="fu">table</span>(datos<span class="sc">$</span>position)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>frecuencia_relativa <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(frecuencia)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar la tabla con frecuencias absolutas y relativas (en porcentaje)</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>tabla_frecuencias <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  Posición <span class="ot">=</span> <span class="fu">names</span>(frecuencia),</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frecuencia =</span> <span class="fu">as.vector</span>(frecuencia),</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frecuencia_Relativa =</span> <span class="fu">round</span>(<span class="fu">as.vector</span>(frecuencia_relativa) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>tabla_frecuencias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a calcular la distribución de las frecuencias relativas de los jugadores por posición</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>frecuencia <span class="ot">&lt;-</span> <span class="fu">table</span>(datos<span class="sc">$</span>position)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>frecuencia_relativa <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(frecuencia)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar la tabla con frecuencias absolutas y relativas (en porcentaje)</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>tabla_frecuencias <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  Posición <span class="ot">=</span> <span class="fu">names</span>(frecuencia),</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frecuencia =</span> <span class="fu">as.vector</span>(frecuencia),</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frecuencia_Relativa =</span> <span class="fu">round</span>(<span class="fu">as.vector</span>(frecuencia_relativa) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>tabla_frecuencias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Posición Frecuencia Frecuencia_Relativa
 1   Defender        172               33.01
@@ -309,19 +420,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="diagrama-de-cajas-de-performace_index-según-el-equipo" class="level2">
 <h2 class="anchored" data-anchor-id="diagrama-de-cajas-de-performace_index-según-el-equipo">4. Diagrama de cajas de <em>performace_index</em> según el equipo</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagrama de cajas de performance_index según team</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(performance_index <span class="sc">~</span> team, </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> datos,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Diagrama de Cajas de Performance Index por Equipo"</span>,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Equipo"</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightgreen"</span>, <span class="st">"lightpink"</span>, <span class="st">"khaki"</span>),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"darkgray"</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">notch =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagrama de cajas de performance_index según team</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(performance_index <span class="sc">~</span> team, </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> datos,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Diagrama de Cajas de Performance Index por Equipo"</span>,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Equipo"</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightgreen"</span>, <span class="st">"lightpink"</span>, <span class="st">"khaki"</span>),</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"darkgray"</span>,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">notch =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -333,22 +444,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="gráfico-de-dispersión-entre-training_hours-y-performance_index" class="level2">
 <h2 class="anchored" data-anchor-id="gráfico-de-dispersión-entre-training_hours-y-performance_index">5. Gráfico de dispersión entre <em>training_hours</em> y <em>performance_index</em></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Construimos un gráfico de dispersión entre training_hours y performance_index</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(datos<span class="sc">$</span>training_hours, datos<span class="sc">$</span>performance_index,</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relación entre horas de entrenamiento y rendimiento"</span>,</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Horas de entrenamiento (training_hours)"</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Índice de rendimiento (performance_index)"</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>,               <span class="co"># tipo de punto sólido</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"steelblue"</span>,      <span class="co"># color de los puntos</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex =</span> <span class="fl">1.2</span>)              <span class="co"># tamaño de los puntos</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregar una línea de tendencia (regresión lineal)</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(performance_index <span class="sc">~</span> training_hours, <span class="at">data =</span> datos), </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Construimos un gráfico de dispersión entre training_hours y performance_index</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(datos<span class="sc">$</span>training_hours, datos<span class="sc">$</span>performance_index,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relación entre horas de entrenamiento y rendimiento"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Horas de entrenamiento (training_hours)"</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Índice de rendimiento (performance_index)"</span>,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>,               <span class="co"># tipo de punto sólido</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"steelblue"</span>,      <span class="co"># color de los puntos</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex =</span> <span class="fl">1.2</span>)              <span class="co"># tamaño de los puntos</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregar una línea de tendencia (regresión lineal)</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(performance_index <span class="sc">~</span> training_hours, <span class="at">data =</span> datos), </span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -358,14 +469,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="matriz-de-correlaciones" class="level2">
 <h2 class="anchored" data-anchor-id="matriz-de-correlaciones">6. Matriz de correlaciones</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la matriz de correlaciones entre variables numéricas</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos[, <span class="fu">sapply</span>(datos, is.numeric)]</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular la matriz de correlaciones</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>matriz_cor <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_numericos, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar la matriz de correlaciones</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>matriz_cor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculamos la matriz de correlaciones entre variables numéricas</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos[, <span class="fu">sapply</span>(datos, is.numeric)]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular la matriz de correlaciones</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>matriz_cor <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_numericos, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar la matriz de correlaciones</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>matriz_cor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  performance_index injuries_count      starter
 performance_index        1.00000000    0.023092517  0.062093683
@@ -458,18 +569,18 @@ left_footed            -0.003450384  -0.027769130
 previous_injuries       1.000000000   0.059581765
 altitude_home           0.059581765   1.000000000</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a visualizarla</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vamos a visualizarla</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>corrplot 0.95 loaded</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(matriz_cor, <span class="at">method =</span> <span class="st">"color"</span>, <span class="at">type =</span> <span class="st">"upper"</span>,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="at">tl.cex =</span> <span class="fl">0.8</span>, </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">addCoef.col =</span> <span class="st">"black"</span>, <span class="at">number.cex =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(matriz_cor, <span class="at">method =</span> <span class="st">"color"</span>, <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="at">tl.cex =</span> <span class="fl">0.8</span>, </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">addCoef.col =</span> <span class="st">"black"</span>, <span class="at">number.cex =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -479,16 +590,16 @@ altitude_home           0.059581765   1.000000000</code></pre>
 <section id="gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento" class="level2">
 <h2 class="anchored" data-anchor-id="gráfico-de-dispersión-entre-fatiga-e-índice-de-rendimiento">7. Gráfico de dispersión entre fatiga e índice de rendimiento</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Representamos un gráfico de dispersión entre training_hours y performance_index</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos, <span class="fu">aes</span>(<span class="at">x =</span> fatigue, <span class="at">y =</span> performance_index)) <span class="sc">+</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relación entre fatiga e índice de rendimiento"</span>,</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Fatiga"</span>,</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Índice de rendimiento"</span>) <span class="sc">+</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Representamos un gráfico de dispersión entre training_hours y performance_index</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos, <span class="fu">aes</span>(<span class="at">x =</span> fatigue, <span class="at">y =</span> performance_index)) <span class="sc">+</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relación entre fatiga e índice de rendimiento"</span>,</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Fatiga"</span>,</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Índice de rendimiento"</span>) <span class="sc">+</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
@@ -503,7 +614,7 @@ altitude_home           0.059581765   1.000000000</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -513,20 +624,20 @@ altitude_home           0.059581765   1.000000000</code></pre>
 <section id="boxplot-del-índice-de-rendimiento-por-posición" class="level2">
 <h2 class="anchored" data-anchor-id="boxplot-del-índice-de-rendimiento-por-posición">8. Boxplot del índice de rendimiento por posición</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Realizamos un boxplot de performance_index por posicion</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(performance_index <span class="sc">~</span> position,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> datos,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Diagrama de Cajas de Performance Index por Posición"</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Posición"</span>,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightgreen"</span>, <span class="st">"lightpink"</span>, <span class="st">"khaki"</span>),</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"gray40"</span>,</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">notch =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Realizamos un boxplot de performance_index por posicion</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(performance_index <span class="sc">~</span> position,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> datos,</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Diagrama de Cajas de Performance Index por Posición"</span>,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Posición"</span>,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightgreen"</span>, <span class="st">"lightpink"</span>, <span class="st">"khaki"</span>),</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"gray40"</span>,</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">notch =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -536,37 +647,37 @@ altitude_home           0.059581765   1.000000000</code></pre>
 <section id="valores-atípicos-en-agility_time" class="level2">
 <h2 class="anchored" data-anchor-id="valores-atípicos-en-agility_time">9. Valores atípicos en <em>agility_time</em></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vamos a identificar los valores atípicos en agility_time </span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos los cuartiles y el rango intercuartílico</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>agility_time, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>agility_time, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>IQR_value <span class="ot">&lt;-</span> <span class="fu">IQR</span>(datos<span class="sc">$</span>agility_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Límites inferior y superior para detectar atípicos</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>lim_inf <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>lim_sup <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificamos los valores atípicos</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> datos<span class="sc">$</span>agility_time[datos<span class="sc">$</span>agility_time <span class="sc">&lt;</span> lim_inf <span class="sc">|</span> datos<span class="sc">$</span>agility_time <span class="sc">&gt;</span> lim_sup]</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos resultados</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>outliers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vamos a identificar los valores atípicos en agility_time </span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos los cuartiles y el rango intercuartílico</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>agility_time, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>agility_time, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>IQR_value <span class="ot">&lt;-</span> <span class="fu">IQR</span>(datos<span class="sc">$</span>agility_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Límites inferior y superior para detectar atípicos</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>lim_inf <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>lim_sup <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificamos los valores atípicos</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> datos<span class="sc">$</span>agility_time[datos<span class="sc">$</span>agility_time <span class="sc">&lt;</span> lim_inf <span class="sc">|</span> datos<span class="sc">$</span>agility_time <span class="sc">&gt;</span> lim_sup]</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos resultados</span></span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>outliers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA NA NA NA NA</code></pre>
 </div>
 </div>
 <p>Vemos que por la regla del rango intercuartílico (IQR) hay 5 valores atípicos, que se corresponden con NA. Es decir, valores no recogidos de esta variable para ciertos jugadores. Vamos a hacer un boxplot para intentar ver más posibles valores atípicos, donde estos hayan sido recogidos.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(datos<span class="sc">$</span>agility_time,</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Detección de valores atípicos en Agility Time"</span>,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Agility Time"</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"gray40"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(datos<span class="sc">$</span>agility_time,</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Detección de valores atípicos en Agility Time"</span>,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Agility Time"</span>,</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"gray40"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -576,16 +687,732 @@ altitude_home           0.059581765   1.000000000</code></pre>
 <section id="proporción-de-jugadores-zurdos-en-la-base-de-datos" class="level2">
 <h2 class="anchored" data-anchor-id="proporción-de-jugadores-zurdos-en-la-base-de-datos">10. Proporción de jugadores zurdos en la base de datos</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos la proporción de jugadores zurdos</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>proporcion_zurdos <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>left_footed <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos el resultado en porcentaje</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>proporcion_zurdos <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos la proporción de jugadores zurdos</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>proporcion_zurdos <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>left_footed <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos el resultado en porcentaje</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>proporcion_zurdos <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 29.17466</code></pre>
 </div>
 </div>
 <p>Como podemos ver, el 29,17% de los jugadores de la base de datos son zurdos.</p>
+</section>
+</section>
+<section id="manejo-de-valores-faltantes" class="level1">
+<h1>2. MANEJO DE VALORES FALTANTES</h1>
+<section id="identificación-de-variables-con-valores-faltantes" class="level2">
+<h2 class="anchored" data-anchor-id="identificación-de-variables-con-valores-faltantes">1. Identificación de variables con valores faltantes</h2>
+<p>Primero, vemos qué columnas tienen valores NA</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver columnas que contienen al menos un NA</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(datos)[<span class="fu">colSums</span>(<span class="fu">is.na</span>(datos)) <span class="sc">&gt;</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "training_hours" "sleep_hours"    "fatigue"        "strength_1RM"  
+[5] "agility_time"  </code></pre>
+</div>
+</div>
+<p>Las variables <em>training_hours</em>, <em>sleep_hours</em>, <em>fatigue</em>, <em>strength_1RM</em> y <em>agility_time</em> tienen valores faltantes.</p>
+<p>Ahora, veremos cuántos valores faltan en cada una</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cantidad de NA solo en columnas donde hay al menos uno</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>na_counts <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(datos))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>na_counts[na_counts <span class="sc">&gt;</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>training_hours    sleep_hours        fatigue   strength_1RM   agility_time 
+             5              5              5              5              5 </code></pre>
+</div>
+</div>
+<p>Así, vemos que hay 5 valores faltantes en cada una de estas variables.</p>
+</section>
+<section id="calculamos-la-proporción-de-valores-faltantes-sobre-el-dataset-completo" class="level2">
+<h2 class="anchored" data-anchor-id="calculamos-la-proporción-de-valores-faltantes-sobre-el-dataset-completo">2. Calculamos la proporción de valores faltantes sobre el dataset completo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Porcentaje total de NA</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">is.na</span>(datos)) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2525508</code></pre>
+</div>
+</div>
+<p>Es decir, el 0.25% de los valores del dataset son valores faltantes.</p>
+</section>
+<section id="resumen-de-combina-las-variables-con-missing-y-su-porcentaje-de-valores-ausentes" class="level2">
+<h2 class="anchored" data-anchor-id="resumen-de-combina-las-variables-con-missing-y-su-porcentaje-de-valores-ausentes">3. Resumen de combina las variables con missing y su porcentaje de valores ausentes</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular cantidad y porcentaje de NA por variable</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>na_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="fu">colnames</span>(datos),</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">na_count =</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(datos)),</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na_percent =</span> (<span class="dv">1</span><span class="sc">-</span> <span class="fu">colMeans</span>(<span class="fu">is.na</span>(datos)) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrar solo variables con al menos un NA</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>na_table <span class="ot">&lt;-</span> na_table[na_table<span class="sc">$</span>na_count <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar tabla</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>na_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     variable na_count na_percent
+training_hours training_hours        5  0.0403071
+sleep_hours       sleep_hours        5  0.0403071
+fatigue               fatigue        5  0.0403071
+strength_1RM     strength_1RM        5  0.0403071
+agility_time     agility_time        5  0.0403071</code></pre>
+</div>
+</div>
+</section>
+<section id="imputación-por-la-media-en-training_hours" class="level2">
+<h2 class="anchored" data-anchor-id="imputación-por-la-media-en-training_hours">4. Imputación por la media en <em>training_hours</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos la media de training_hours ignorando NA</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>media_training <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>training_hours, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Imputamos los NA con la media</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>training_hours_imputada <span class="ot">&lt;-</span> datos<span class="sc">$</span>training_hours</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>training_hours_imputada[<span class="fu">is.na</span>(training_hours_imputada)] <span class="ot">&lt;-</span> media_training</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos de nuevo la media después de imputar</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>nueva_media_training <span class="ot">&lt;-</span> <span class="fu">mean</span>(training_hours_imputada)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Comprobamos que el valor es el mismo</span></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>media_training</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13.69029</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>nueva_media_training</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13.69029</code></pre>
+</div>
+</div>
+<p>Con esto, hemos sustituido los valores faltantes de la variable <em>training_hours</em> con la media de los valores de esta variable.</p>
+</section>
+<section id="histogramas-de-sleep_hours-antes-y-después-de-la-imputación-por-la-media" class="level2">
+<h2 class="anchored" data-anchor-id="histogramas-de-sleep_hours-antes-y-después-de-la-imputación-por-la-media">5. Histogramas de <em>sleep_hours</em> antes y después de la imputación por la media</h2>
+<p>En primer lugar, trabajaremos con la variable sin imputar (con valores faltantes).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Guardamos una copia de la variable original</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>sleep_original <span class="ot">&lt;-</span> datos<span class="sc">$</span>sleep_hours</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos la media sin NA</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>media_sleep <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>sleep_hours, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A continuación, trabajaremos con la versión imputada.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creamos la versión imputada</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>sleep_imputada <span class="ot">&lt;-</span> datos<span class="sc">$</span>sleep_hours</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>sleep_imputada[<span class="fu">is.na</span>(sleep_imputada)] <span class="ot">&lt;-</span> media_sleep</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ahora, podemos desarrollar los histogramas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas antes y después</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))  <span class="co"># Mostrar dos gráficos juntos</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sleep_original,</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Sleep Hours - Antes imputación"</span>,</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Horas de sueño"</span>)</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sleep_imputada,</span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Sleep Hours - Después imputación con media"</span>,</span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Horas de sueño"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Como podemos ver, no se aprecian diferencias aparentes. Esto se debe al hecho de que, al imputar los valores faltantes por la media, no modificamos la estructura presente de la variable. Así, el único cambio aparente es un aumento de la frecuencia para los valores cercanos a la mediana (asumimos que son los imputados). Sin embargo, como afirmamos, la distribución es la misma.</p>
+</section>
+<section id="imputación-por-la-mediana-en-fatigue-y-comparación-con-imputación-con-la-media." class="level2">
+<h2 class="anchored" data-anchor-id="imputación-por-la-mediana-en-fatigue-y-comparación-con-imputación-con-la-media.">6. Imputación por la mediana en <em>fatigue</em> y comparación con imputación con la media.</h2>
+<p>En primer lugar, imputamos los valores por la mediana en la variable <em>fatigue</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculamos la mediana ignorando NA</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>mediana_fatigue <span class="ot">&lt;-</span> <span class="fu">median</span>(datos<span class="sc">$</span>fatigue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear una nueva variable con la imputación</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>fatigue_imputada <span class="ot">&lt;-</span> datos<span class="sc">$</span>fatigue</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>fatigue_imputada[<span class="fu">is.na</span>(fatigue_imputada)] <span class="ot">&lt;-</span> mediana_fatigue</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Comprobamos que ya no hay NA</span></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(fatigue_imputada))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>A continuación, hacemos la imputación por la media.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular la media ignorando NA</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>media_fatigue <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>fatigue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear nueva variable imputada por la media</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>fatigue_imputada_media <span class="ot">&lt;-</span> datos<span class="sc">$</span>fatigue</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>fatigue_imputada_media[<span class="fu">is.na</span>(fatigue_imputada_media)] <span class="ot">&lt;-</span> media_fatigue</span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Comprobar la imputación</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(fatigue_imputada_media))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>Ahora, porcedemos a comparar estas nuevas variables creadas.</p>
+<p>Para ello, empezaremos comparando estadísticas básicas mediante una tabla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Media original (ignorando NA)</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>media_original <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos<span class="sc">$</span>fatigue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Media tras imputación por mediana</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>media_median <span class="ot">&lt;-</span> <span class="fu">mean</span>(fatigue_imputada, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Media tras imputación por media</span></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>media_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(fatigue_imputada_media, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Mediana original</span></span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>mediana_original <span class="ot">&lt;-</span> <span class="fu">median</span>(datos<span class="sc">$</span>fatigue, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Mediana tras imputación por mediana</span></span>
+<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a>mediana_median <span class="ot">&lt;-</span> <span class="fu">median</span>(fatigue_imputada, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-16"><a href="#cb76-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Mediana tras imputación por media</span></span>
+<span id="cb76-17"><a href="#cb76-17" aria-hidden="true" tabindex="-1"></a>mediana_mean <span class="ot">&lt;-</span> <span class="fu">median</span>(fatigue_imputada_media, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-18"><a href="#cb76-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-19"><a href="#cb76-19" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb76-20"><a href="#cb76-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Version =</span> <span class="fu">c</span>(<span class="st">"Original"</span>, <span class="st">"Imputación Mediana"</span>, <span class="st">"Imputación Media"</span>),</span>
+<span id="cb76-21"><a href="#cb76-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">Media =</span> <span class="fu">c</span>(media_original, media_median, media_mean),</span>
+<span id="cb76-22"><a href="#cb76-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mediana =</span> <span class="fu">c</span>(mediana_original, mediana_median, mediana_mean)</span>
+<span id="cb76-23"><a href="#cb76-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Version    Media Mediana
+1           Original 49.40407    49.3
+2 Imputación Mediana 49.40307    49.3
+3   Imputación Media 49.40407    49.3</code></pre>
+</div>
+</div>
+<p>De esta manera, vemos que la imputación por la mediana modifica ligeramente la media de la variable; mientras que el valor de la mediana permanece intacto en cualquier caso.</p>
+<p>Vamos a ver si este cambio es significativo. Para ello, haremos un <em>t-test</em>, cuya hipótesis nula será que el cambio no es significativo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores originales sin NA</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>original <span class="ot">&lt;-</span> datos<span class="sc">$</span>fatigue[<span class="sc">!</span><span class="fu">is.na</span>(datos<span class="sc">$</span>fatigue)]</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores imputados por mediana</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>imputada_mediana <span class="ot">&lt;-</span> fatigue_imputada</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Posiciones donde había NA</span></span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>na_pos <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">is.na</span>(datos<span class="sc">$</span>fatigue))</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparar solo los valores imputados (NA reemplazados por mediana) con los originales</span></span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>imputados_vs_original <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="at">original =</span> datos<span class="sc">$</span>fatigue, <span class="at">imputada =</span> imputada_mediana)</span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Para test t, usamos los NA reemplazados</span></span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Aquí hacemos un t-test aproximado usando todos los valores, aunque no es estrictamente válido</span></span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(original, imputada_mediana[<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(original)], <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Paired t-test
+
+data:  original and imputada_mediana[1:length(original)]
+t = 0.11774, df = 515, p-value = 0.9063
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ -1.544242  1.741141
+sample estimates:
+mean difference 
+     0.09844961 </code></pre>
+</div>
+</div>
+<p>El p-valor resulta muy elevado, por lo que no podemos rechazar la hipótesis nula. De esta manera, concluimos que la diferencia no es estadísticamente significativa.</p>
+<p>A continuación, haremos una comparación de histogramas, para ver si a nivel visual hay una diferencia apreciable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))  <span class="co"># Mostrar tres gráficos juntos</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(datos<span class="sc">$</span>fatigue, <span class="at">main =</span> <span class="st">"Original"</span>, <span class="at">xlab =</span> <span class="st">"Fatigue"</span>, <span class="at">col =</span> <span class="st">"lightblue"</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fatigue_imputada, <span class="at">main =</span> <span class="st">"Imputación Mediana"</span>, <span class="at">xlab =</span> <span class="st">"Fatigue"</span>, <span class="at">col =</span> <span class="st">"lightgreen"</span>)</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fatigue_imputada_media, <span class="at">main =</span> <span class="st">"Imputación Media"</span>, <span class="at">xlab =</span> <span class="st">"Fatigue"</span>, <span class="at">col =</span> <span class="st">"lightpink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Como se puede ver, a nivel visual apenas hay diferencia. Simplemente, en ambas imputaciones,la barra que abarca los valores de la mediana incrementa (ya que la media es próxima a la mediana), pero mantienen la estructura.</p>
+<p>Así, concluimos que apenas hay diferencias entre ambas imputaciones.</p>
+</section>
+<section id="imputación-condicional-en-strength_1rm" class="level2">
+<h2 class="anchored" data-anchor-id="imputación-condicional-en-strength_1rm">7. Imputación condicional en <em>strength_1RM</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creamos una nueva variable imputada sin modificar la original</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>strength_1RM_imputada <span class="ot">&lt;-</span> datos<span class="sc">$</span>strength_1RM</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular media por posición y reemplazamos los NA</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>strength_1RM_imputada <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(position) <span class="sc">%&gt;%</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">strength_1RM_imputada =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(strength_1RM),</span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(strength_1RM, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb81-10"><a href="#cb81-10" aria-hidden="true" tabindex="-1"></a>    strength_1RM</span>
+<span id="cb81-11"><a href="#cb81-11" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb81-12"><a href="#cb81-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb81-13"><a href="#cb81-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(strength_1RM_imputada)</span>
+<span id="cb81-14"><a href="#cb81-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-15"><a href="#cb81-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Comprobar que los NA fueron imputados</span></span>
+<span id="cb81-16"><a href="#cb81-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(strength_1RM_imputada))  <span class="co"># Debe ser 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>Una vez creada la variable, verificamos que cumple los objetivos y actualizaremos la variable <em>strength_1RM</em> del conjunto de datos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Media por posición antes de imputar</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>media_original <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(position) <span class="sc">%&gt;%</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">media_strength =</span> <span class="fu">mean</span>(strength_1RM, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadimos la variable al dataset</span></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>strength_1RM_imputada <span class="ot">&lt;-</span> strength_1RM_imputada  </span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Media por posición después de imputar</span></span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>media_imputada <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(position) <span class="sc">%&gt;%</span></span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">media_strength =</span> <span class="fu">mean</span>(strength_1RM_imputada, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminamos la variable del dataset</span></span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>strength_1RM_imputada <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-18"><a href="#cb83-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-19"><a href="#cb83-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb83-20"><a href="#cb83-20" aria-hidden="true" tabindex="-1"></a>media_original</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  position   media_strength
+  &lt;chr&gt;               &lt;dbl&gt;
+1 Defender             147.
+2 Forward              148.
+3 Goalkeeper           154.
+4 Midfielder           151.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>media_imputada</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  position   media_strength
+  &lt;chr&gt;               &lt;dbl&gt;
+1 Defender             147.
+2 Forward              148.
+3 Goalkeeper           154.
+4 Midfielder           151.</code></pre>
+</div>
+</div>
+<p>Vemos que los valores coinciden, por lo que la imputación ha sido realizada de forma correcta.</p>
+</section>
+<section id="comentario-acerca-de-los-valores-faltantes" class="level2">
+<h2 class="anchored" data-anchor-id="comentario-acerca-de-los-valores-faltantes">8. Comentario acerca de los valores faltantes</h2>
+<p>En primer lugar, para ello, vamos a ver el patrón de los NA. Es decir, vamos a ver dónde aparecen los NA, si hay combinaciones de NA entre variables o si aparecen de forma aleatoria.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    performance_index injuries_count starter passes_attempted passes_success
+496                 1              1       1                1              1
+5                   1              1       1                1              1
+5                   1              1       1                1              1
+5                   1              1       1                1              1
+5                   1              1       1                1              1
+5                   1              1       1                1              1
+                    0              0       0                0              0
+    age match_intensity position travel_km_week nutrition_score team
+496   1               1        1              1               1    1
+5     1               1        1              1               1    1
+5     1               1        1              1               1    1
+5     1               1        1              1               1    1
+5     1               1        1              1               1    1
+5     1               1        1              1               1    1
+      0               0        0              0               0    0
+    left_footed previous_injuries altitude_home training_hours sleep_hours
+496           1                 1             1              1           1
+5             1                 1             1              1           1
+5             1                 1             1              1           1
+5             1                 1             1              1           1
+5             1                 1             1              1           0
+5             1                 1             1              0           1
+              0                 0             0              5           5
+    fatigue strength_1RM agility_time   
+496       1            1            1  0
+5         1            1            0  1
+5         1            0            1  1
+5         0            1            1  1
+5         1            1            1  1
+5         1            1            1  1
+          5            5            5 25</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(datos, <span class="at">prop =</span> <span class="cn">TRUE</span>, <span class="at">numbers =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-29-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Como podemos apreciar, no hay NA agrupados en la misma observación. Por tanto, podemos intuir que los valores faltantes son fruto del azar (MCAR). Por tanto, nos ayudaremos de un test estadístico que nos diga si lo son (el test mcar).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar proporción de NA por variable</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver patrón de NA entre variables</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_upset</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette("ggplot2-in-packages")` for more information.
+ℹ The deprecated feature was likely used in the UpSetR package.
+  Please report the issue to the authors.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+ℹ The deprecated feature was likely used in the UpSetR package.
+  Please report the issue to the authors.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_line()`: Each group consists of only one observation.
+ℹ Do you need to adjust the group aesthetic?</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+ℹ The deprecated feature was likely used in the UpSetR package.
+  Please report the issue to the authors.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcar_test</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  statistic    df p.value missing.patterns
+      &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;            &lt;int&gt;
+1      109.    90  0.0800                6</code></pre>
+</div>
+</div>
+<p>Como el p-valor es mayor de 0.05, no podemos rechazar que sean MCAR.</p>
+<p>Con esto y la información anterior, podemos concluir que los valores faltantes que tenemos son MCAR, al provenir completamente del azar.</p>
+</section>
+<section id="modelo-lineal-simple-entre-performance_index-y-training_hours" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-lineal-simple-entre-performance_index-y-training_hours">9. Modelo lineal simple entre <em>performance_index</em> y <em>training_hours</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustar modelo lineal simple usando solo casos completos</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance_index <span class="sc">~</span> training_hours, <span class="at">data =</span> datos, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen del modelo</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = performance_index ~ training_hours, data = datos, 
+    na.action = na.omit)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-24.1764  -5.2639   0.5892   5.9276  23.4731 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     35.9086     1.4874   24.14   &lt;2e-16 ***
+training_hours   1.7112     0.1056   16.20   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.888 on 514 degrees of freedom
+  (5 observations deleted due to missingness)
+Multiple R-squared:  0.3379,    Adjusted R-squared:  0.3367 
+F-statistic: 262.4 on 1 and 514 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Como tenemos un modelo con 514 grados de libertad, es fácil deducir que se han perdido 5 observaciones por NA.</p>
+<p>A continuación, vamos a ver qué filas se han perdido exactamente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filas completas (sin NA) en performance_index y training_hours</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>casos_completos <span class="ot">&lt;-</span> <span class="fu">complete.cases</span>(datos[, <span class="fu">c</span>(<span class="st">"performance_index"</span>, <span class="st">"training_hours"</span>)])</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filas perdidas (con NA)</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>filas_perdidas <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span>casos_completos)</span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostramos los índices de las filas perdidas</span></span>
+<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>filas_perdidas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 109 131 180 393 500</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-lineal-con-valores-imputados" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-lineal-con-valores-imputados">10. Modelo lineal con valores imputados</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustar modelo lineal usando la variable imputada</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>modelo_imputado <span class="ot">&lt;-</span> <span class="fu">lm</span>(datos<span class="sc">$</span>performance_index <span class="sc">~</span> training_hours_imputada)</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen del modelo</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_imputado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = datos$performance_index ~ training_hours_imputada)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-26.3421  -5.2274   0.5909   6.0180  23.5766 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)              35.8050     1.5136   23.66   &lt;2e-16 ***
+training_hours_imputada   1.7112     0.1075   15.91   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.029 on 519 degrees of freedom
+Multiple R-squared:  0.3279,    Adjusted R-squared:  0.3266 
+F-statistic: 253.2 on 1 and 519 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Vemos la diferencia entre los coeficientes de los modelos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coeficientes del modelo original</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   (Intercept) training_hours 
+     35.908593       1.711218 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coeficientes del modelo imputado</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(modelo_imputado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept) training_hours_imputada 
+              35.805026                1.711218 </code></pre>
+</div>
+</div>
+<p>Los coeficientes han cambiado ligeramente, al cambiar el número de observaciones, con valores añadidos manualmente. Sin embargo, la diferencia es mínima, al haber muy pocos valores faltantes, por lo que los cambios no influyen prácticamente en el modelo; ya que los coeficientes cambian mínimamente.</p>
+</section>
+</section>
+<section id="regresión-lineal-simple-y-múltiple" class="level1">
+<h1>3. REGRESIÓN LINEAL SIMPLE Y MÚLTIPLE</h1>
+<section id="modelo-de-regresión-lineal-simple-entre-performance_index-y-training_hours" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-de-regresión-lineal-simple-entre-performance_index-y-training_hours">1. Modelo de regresión lineal simple entre <em>performance_index</em> y <em>training_hours</em></h2>
+<p>Emplearemos las variables imputadas comentadas previamente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen del modelo</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_imputado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = datos$performance_index ~ training_hours_imputada)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-26.3421  -5.2274   0.5909   6.0180  23.5766 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)              35.8050     1.5136   23.66   &lt;2e-16 ***
+training_hours_imputada   1.7112     0.1075   15.91   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.029 on 519 degrees of freedom
+Multiple R-squared:  0.3279,    Adjusted R-squared:  0.3266 
+F-statistic: 253.2 on 1 and 519 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>La pendiente (con valor 1.7112) indica que, por cada hora de entrenamiento, el valor del índice de rendimiento aumenta 1.7112.</p>
+</section>
+<section id="gráfico-de-dispersión-del-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="gráfico-de-dispersión-del-modelo">2. Gráfico de dispersión del modelo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(datos<span class="sc">$</span>training_hours, datos<span class="sc">$</span>performance_index,</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Performance Index vs Training Hours"</span>,</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Training Hours"</span>,</span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Performance Index"</span>,</span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-8"><a href="#cb110-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadir recta ajustada del modelo imputado</span></span>
+<span id="cb110-9"><a href="#cb110-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(datos<span class="sc">$</span>performance_index <span class="sc">~</span> training_hours_imputada), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb110-10"><a href="#cb110-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-11"><a href="#cb110-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Leyenda</span></span>
+<span id="cb110-12"><a href="#cb110-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Datos"</span>, <span class="st">"Recta modelo imputado"</span>),</span>
+<span id="cb110-13"><a href="#cb110-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="cn">NA</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">1</span>), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practica1_estadistica_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cálculo-y-análisis-del-r2-del-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="cálculo-y-análisis-del-r2-del-modelo">3. Cálculo y análisis del R^2 del modelo</h2>
+<p>En primer lugar, calcularemos el R^2 del modelo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R^2 del modelo imputado</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_imputado)<span class="sc">$</span>r.squared</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3279338</code></pre>
+</div>
+</div>
+<p>El R^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la variabilidad del índice de rendimiento.</p>
+</section>
+<section id="modelo-de-regresión-lineal-múltiple" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-de-regresión-lineal-múltiple">4. Modelo de regresión lineal múltiple</h2>
+<p>Vamos a ajustar un modelo de regresión lineal múltiple con la variable <em>performance_index</em> explicada a partir de <em>training_hours</em>, <em>match_intensity</em> y <em>strength_1RM</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustar modelo lineal múltiple</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>modelo_multiple <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance_index <span class="sc">~</span> training_hours <span class="sc">+</span> match_intensity <span class="sc">+</span> strength_1RM, <span class="at">data =</span> datos, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen del modelo</span></span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = performance_index ~ training_hours + match_intensity + 
+    strength_1RM, data = datos, na.action = na.omit)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-23.5439  -5.0539   0.4122   5.9659  23.2461 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     31.79396    3.30520   9.619   &lt;2e-16 ***
+training_hours   1.72530    0.10617  16.250   &lt;2e-16 ***
+match_intensity  0.07622    0.03036   2.510   0.0124 *  
+strength_1RM    -0.01003    0.01497  -0.670   0.5031    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.859 on 507 degrees of freedom
+  (10 observations deleted due to missingness)
+Multiple R-squared:  0.3494,    Adjusted R-squared:  0.3455 
+F-statistic: 90.76 on 3 and 507 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>La variable que más efecto tiene sobre el rendimiento es <em>training_hours</em>, cuyo coeficiente asociado vale 1.7253 (mucho mayor que el valor absoluto del resto).</p>
+</section>
+<section id="comparación-con-el-modelo-simple" class="level2">
+<h2 class="anchored" data-anchor-id="comparación-con-el-modelo-simple">5. Comparación con el modelo simple</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coeficiente del modelo simple</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>coef_simple <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo)[<span class="st">"training_hours"</span>]</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>coef_simple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>training_hours 
+      1.711218 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coeficiente del modelo múltiple</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>coef_multiple <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_multiple)[<span class="st">"training_hours"</span>]</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>coef_multiple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>training_hours 
+      1.725297 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intercepto del modelo simple</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>intercepto_simple <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo)[<span class="st">"(Intercept)"</span>]</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>intercepto_simple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept) 
+   35.90859 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intercepto del modelo múltiple</span></span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>intercepto_multiple <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_multiple)[<span class="st">"(Intercept)"</span>]</span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>intercepto_multiple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept) 
+   31.79396 </code></pre>
+</div>
+</div>
+<p>Vemos, de esta manera, que el coeficiente de la variable <em>training_hours</em> aumenta en el modelo múltiple y el intercepto disminuye su valor.</p>
+<p>Esto se debe a que los coeficientes asociados a las otras variables le restan valor a las horas de entrenamientos, ajustándose así a la realidad que permite explicar el modelo. Por otro lado, tiene sentido que el intercepto sea menor, ya que la pendiente parece más pronunciada por este incremento del coeficiente asociado a la variable <em>training_hours</em>.</p>
+</section>
+<section id="adición-de-la-variable-fatigue" class="level2">
+<h2 class="anchored" data-anchor-id="adición-de-la-variable-fatigue">6. Adición de la variable <em>fatigue</em></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustar modelo múltiple con fatigue</span></span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>modelo_multiple2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance_index <span class="sc">~</span> training_hours <span class="sc">+</span> match_intensity <span class="sc">+</span> strength_1RM <span class="sc">+</span> fatigue, <span class="at">data =</span> datos, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen del modelo</span></span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_multiple2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = performance_index ~ training_hours + match_intensity + 
+    strength_1RM + fatigue, data = datos, na.action = na.omit)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-23.2689  -4.9222   0.5522   5.5810  20.8094 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     39.402280   3.411640  11.549  &lt; 2e-16 ***
+training_hours   1.707699   0.102800  16.612  &lt; 2e-16 ***
+match_intensity  0.070766   0.029355   2.411   0.0163 *  
+strength_1RM    -0.007318   0.014491  -0.505   0.6138    
+fatigue         -0.149997   0.023112  -6.490 2.07e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.583 on 501 degrees of freedom
+  (15 observations deleted due to missingness)
+Multiple R-squared:  0.3996,    Adjusted R-squared:  0.3948 
+F-statistic: 83.36 on 4 and 501 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>El R^2 ajustado ha mejorado tras añadir esta nueva variable al modelo. Esto significa que es útil, ya que el hecho de haberla añadido permite explicar cierta variabilidad del índice de rendimiento.</p>
+</section>
+<section id="efecto-de-la-variable-position" class="level2">
+<h2 class="anchored" data-anchor-id="efecto-de-la-variable-position">7. Efecto de la variable <em>position</em></h2>
+<p>Si metemos la variable categórica <em>position</em> en un modelo de regresión lineal múltiple con predictores cuantitativos, la variable categórica se convierte en valores Dummy de la siguiente manera:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpiar la variable</span></span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>position <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">trimws</span>(<span class="fu">tolower</span>(datos<span class="sc">$</span>position)))</span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear dummies</span></span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>dummy_matrix <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> position, <span class="at">data =</span> datos)</span>
+<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a>dummy_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(dummy_matrix[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de correspondencia: un nivel por fila</span></span>
+<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a>tabla_correspondencia <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">cbind</span>(<span class="at">position =</span> datos<span class="sc">$</span>position, dummy_df))</span>
+<span id="cb125-10"><a href="#cb125-10" aria-hidden="true" tabindex="-1"></a>tabla_correspondencia</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    position positionforward positiongoalkeeper positionmidfielder
+1    forward               1                  0                  0
+2   defender               0                  0                  0
+4 midfielder               0                  0                  1
+9 goalkeeper               0                  1                  0</code></pre>
+</div>
+</div>
+<p>En este caso, se habrían estimado estos coeficientes Dummy para las posiciones.</p>
+<p>El que tiene todo 0 es la referencia (en este caso, los defensas). El resto de coeficientes Dummy se comparan con este nivel.</p>
+<p>El modelo devolverá un valor entre la diferencia de posiciones, que permite determinar la diferencia de rendimiento entre jugadores de las mismas.</p>
+</section>
+<section id="incluimos-sleep_hours-como-predictor-adicional" class="level2">
+<h2 class="anchored" data-anchor-id="incluimos-sleep_hours-como-predictor-adicional">8. Incluimos <em>sleep_hours</em> como predictor adicional</h2>
 </section>
 </section>
 
