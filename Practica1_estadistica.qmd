@@ -721,6 +721,7 @@ El R\^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la 
 
 ## 4. Modelo de regresión lineal múltiple
 
+
 Vamos a ajustar un modelo de regresión lineal múltiple con la variable *performance_index* explicada a partir de *training_hours*, *match_intensity* y *strength_1RM*.
 
 ```{r}
@@ -1518,6 +1519,8 @@ Es decir, el uso de los GLM puede ayudar en caso de problemas con heterocedastic
 En este caso, lo mejor será dejar el modelo tal cual está, ya que no tenemos grandes problemas de heterocedasticidad que puedan dar lugar a errores posteriores con tests o intervalos de confianza.
 
 De esta manera, al no haber heterocedasticidad marcada ni una gran diferencia entre residuos normales y robustos, lo mejor será mantener la regresión múltiple estándar.
+
+
 
 
 
