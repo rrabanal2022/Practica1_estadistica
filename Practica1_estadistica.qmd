@@ -25,6 +25,9 @@ library(VIM)
 library(naniar)
 library(car)
 library(splines)
+library(lmtest)
+library(sandwich)
+library(ggplot2)
 
 ```
 
@@ -666,7 +669,6 @@ coef(modelo_imputado)
 
 Los coeficientes han cambiado ligeramente, al cambiar el número de observaciones, con valores añadidos manualmente. Sin embargo, la diferencia es mínima, al haber muy pocos valores faltantes, por lo que los cambios no influyen prácticamente en el modelo; ya que los coeficientes cambian mínimamente.
 
-
 # 3. REGRESIÓN LINEAL SIMPLE Y MÚLTIPLE
 
 ## 1. Modelo de regresión lineal simple entre *performance_index* y *training_hours*
@@ -1136,7 +1138,6 @@ AIC(modelo_lineal_training, modelo_cuadratico_training, modelo_piecewise_trainin
 
 El modelo piecewise es el de mayor AIC, mientras que el cuadrático es el de menor AIC. De esta manera, el mejor modelo será el cuadrático, ya que es el que mejor combina ajuste y simplicidad.
 
-
 ## 8. Representación gráfica de las predicciones del modelo piecewise frente a las observaciones reales
 
 En primer lugar, hacemos una predicción a partir del modelo piecewise
@@ -1151,7 +1152,6 @@ datos$pred_piecewise_training[!is.na(datos$training_hours)] <-
 
 
 ```
-
 
 A continuación, hacemos la gráfica que permita ver la diferencia de esto frente a las observaciones reales.
 
@@ -1185,6 +1185,7 @@ ggplot(datos, aes(x = training_hours_imputada)) +
 
 
 ```
+
 De esta manera, podemos ver las predicciones del modelo piecewise sobre las observaciones reales.
 
 ## 9. Ajuste de modelo lineal simple con casos completos
@@ -1224,9 +1225,10 @@ summary(modelo_lineal_faltante)
 
 
 ```
+
 ## 10. Modelo con dataset imputado
 
-Vamos a crear un dataset con todos los datos imputados 
+Vamos a crear un dataset con todos los datos imputados
 
 ```{r}
 
@@ -1256,6 +1258,266 @@ modelo_lineal_imputado <- lm(performance_index ~ training_hours, data = datos_im
 summary(modelo_lineal_imputado)
 
 ```
+
 Cambia mínimamente el intercepto, pero es un cambio demasiado pequeño como para tenerlo en cuenta. Por otro lado, la pendiente sigue igual.
+
+
+# 5. HETEROCEDASTICIDAD
+
+## 1. Ajuste de modelo múltiple con gráfico de residuos
+
+Vamos a crear el modelo múltiple con los datos imputados.
+
+```{r}
+
+modelo_multiple5.1 <- lm(
+  performance_index ~ training_hours + match_intensity + strength_1RM + fatigue,
+  data = datos_imputados
+)
+
+summary(modelo_multiple5.1)
+
+```
+A continuación, vamos a disponer el gráfico de residuos vs valores ajustados.
+
+```{r}
+
+ggplot(data = datos_imputados, aes(x = modelo_multiple5.1$fitted.values,
+                                   y = modelo_multiple5.1$residuals)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  geom_hline(yintercept = 0, color = "red", linewidth = 1) +
+  labs(title = "Residuos vs Valores Ajustados (Modelo Múltiple)",
+       x = "Valores ajustados",
+       y = "Residuos") +
+  theme_minimal()
+
+```
+
+En el gráfico podemos apreciar los residuos dispersos alrededor de 0 sin patrones aparentes, por lo que la relación lineal es razonable. Puede haber algo de heterocedasticidad, pero nada preocupante a priori.
+
+## 2. Test de Breusch-Pagan
+
+Aplicaremos al modelo recientemente creado el test mencionado para determinar si hay un problema de heterocedasticidad.
+
+```{r}
+
+bptest(modelo_multiple5.1)
+
+```
+
+El p-valor del test es muy elevado, por lo que no podemos rechazar la hipótesis de homocedasticidad. De esta manera, no podemos concluir que haya un problema de heterocedasticidad en el modelo.
+
+
+## 3. Varianza de los residuos en la variable *fatigue*
+
+Empezaremos extrayendo los residuos del modelo, dividiendo los casos en 3 niveles de fatiga (bajo, medio y alto) dividiendo la muestra en terciles para tomar grupos con el mismo número de muestras.
+
+```{r}
+
+# Residuos
+residuos <- residuals(modelo_multiple5.1)
+
+# Crear niveles bajo–medio–alto por terciles
+datos_imputados$fatigue_grupo <- cut(
+  datos_imputados$fatigue,
+  breaks = quantile(datos_imputados$fatigue, probs = c(0, 1/3, 2/3, 1), na.rm = TRUE),
+  labels = c("Bajo", "Medio", "Alto"),
+  include.lowest = TRUE
+)
+
+
+```
+
+A continuación, calculamos la varianza de los residuos en cada uno de los grupos.
+
+```{r}
+
+tapply(residuos, datos_imputados$fatigue_grupo, var)
+
+
+```
+
+Vemos que las varianzas son similares, pero con ligeras variaciones. Sin embargo, vamos a concluir si la diferencia entre estas es estadísticamente significativa. Para ello, usaremos el test de Bartlett.
+
+```{r}
+
+bartlett.test(residuos ~ datos_imputados$fatigue_grupo)
+
+```
+
+Como el p-valor es muy elevado, no podemos afirmar que la diferencia de varianzas entre los residuos sea estadísticamente significativa.
+
+## 4. Gráfica de residuos vs *sleep_hours*
+
+
+```{r}
+
+# Obtener los residuos del modelo
+residuos <- residuals(modelo_multiple5.1)
+ajustados <- fitted(modelo_multiple5.1)
+
+
+ggplot(datos_imputados, aes(x = sleep_hours, y = residuos)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  geom_smooth(method = "loess", se = FALSE, color = "red", linewidth = 1) +
+  labs(title = "Residuos vs. Horas de sueño",
+       x = "Horas de sueño",
+       y = "Residuos") +
+  theme_minimal()
+
+
+```
+
+En este caso, vemos como los residuos se alejan del 0, por lo que podemos detectar un ligero problema de heterocedasticidad; ya que la varianza de los residuos parece incrementar conforme lo hacen las horas de sueño.
+
+De esta manera, podemos intuir que la varianza depende de las horas de sueño.
+
+## 5. Modelo con errores estándar robusto (HC)
+
+```{r}
+
+# 1. Errores estándar clásicos
+clasico <- summary(modelo_multiple5.1)$coefficients[, 2]
+
+# 2. Errores estándar robustos (HC3)
+robustos <- sqrt(diag(vcovHC(modelo_multiple5.1, type = "HC3")))
+
+# 3. Comparación en un data frame
+comparacion <- data.frame(
+  Coeficiente = names(clasico),
+  SE_Clasico = clasico,
+  SE_Robusto_HC3 = robustos,
+  Aumento_relativo = robustos / clasico
+)
+
+comparacion
+
+```
+Vemos que los errores de los coeficientes cambian considerablemente con respecto de los del modelo original.
+
+## 6. Transformación logarítmica al predictor *travel_km_week*
+
+En primer lugar, creamos la variable transformada (le sumamos 1 para que no haya valores iguales a 0 y pueda tomar logaritmos).
+
+```{r}
+
+datos_imputados$log_travel_km_week <- log(datos_imputados$travel_km_week+1)
+
+```
+
+A continuación, vamos a hacer el modelo con la variable ajustada
+
+```{r}
+
+modelo_multiple5.6 <- lm(
+  performance_index ~ training_hours + match_intensity + strength_1RM + fatigue + log_travel_km_week,
+  data = datos_imputados
+)
+
+# Resumen del modelo
+summary(modelo_multiple5.6)
+
+```
+Para ver si mejora la heterocedasticidad dibujaremos la gráfica de residuos vs valores ajustados de este nuevo modelo
+
+```{r}
+
+# Para el modelo original
+plot(modelo_multiple5.1$fitted.values, modelo_multiple5.1$residuals,
+     xlab = "Valores ajustados", ylab = "Residuos",
+     main = "Residuos vs valores ajustados (modelo original)")
+abline(h = 0, col = "red")
+
+# Para el modelo con log
+plot(modelo_multiple5.6$fitted.values, modelo_multiple5.6$residuals,
+     xlab = "Valores ajustados", ylab = "Residuos",
+     main = "Residuos vs valores ajustados (modelo log)")
+abline(h = 0, col = "red")
+
+
+```
+
+La gráfica es similar, pero podemos apreciar que los valores tienden a concetrarse en mayor medida en el centro de la gráfica. De esta manera, podemos intuir que se "corrige" un poco el ligero problema de heterocedasticidad que podíamos haber tenido antes.
+
+
+De todas formas, vamos a verlo con el test Breusch-Pagan
+
+```{r}
+
+# Modelo original
+bptest(modelo_multiple5.1)
+
+# Modelo log-transformado
+bptest(modelo_multiple5.6)
+
+```
+
+Como ambos p-valores son mucho mayores que 0.05, concluimos que no hay diferencia significativa a pesar del ligero aporte que se haya podido dar al modelo.
+
+## 7. Estudio gráfico sobre la causa de la heterocedasticidad
+
+Tomamos en primer lugar los residuos estandarizados. 
+
+```{r}
+
+residuos5.6 <- rstandard(modelo_multiple5.6)
+
+```
+
+
+Ahora, vamos a ver si la heterocedasticidad depende de la fatiga
+
+```{r}
+
+plot(datos_imputados$fatigue, residuos,
+     xlab = "Fatiga",
+     ylab = "Residuos estandarizados",
+     main = "Residuos vs Fatiga")
+abline(h = 0, col = "red")
+
+```
+
+Los valores aparecen de manera uniforme sin patrones claros, por lo que los residuos de los jugadores con altos valores de fatiga no parecen sufrir de heterocedasticidad.
+
+Por otro lado, vamos a ver si esta depende de las horas de sueño
+
+```{r}
+
+plot(datos_imputados$sleep_hours, residuos,
+     xlab = "Horas de sueño",
+     ylab = "Residuos estandarizados",
+     main = "Residuos vs Sueño")
+abline(h = 0, col = "red")
+
+```
+
+
+Los residuos de jugadores con pocas horas de sueño aparecen más dispersos que los valores de la anterior gráfica. 
+
+Por tanto, podemos concluir que el efecto de la heterocedasticidad es más acusado para jugadores con pocas horas de sueño que para aquellos con mucha fatiga.
+
+## 8. Cómo afecta la heterocedasticidad
+
+La heterocedasticidad es, por definición, el fenómeno ocurrido cuando la varianza de los errores cambia según los valores de los predictores.
+
+En una primera instancia, esto implica que los estimadores de los coeficientes no sean de mínima varianza, perdiendo así eficacia.
+
+De esta manera, la varianza obtenida a partir de los estimadores a la hora de hacer intervalos de confianza, se estimará incorrectamente; derivando en intervalos de confianza que no reflejen correctamente el umbral real.
+
+Con respecto a los tests de significación, tenemos un problema similar. En este caso, lo que cambiará será el p-valor de los mismos. En particular, en caso de sobreestimar varianza, tendremos riesgos de encontrar falsos negativos (es decir, de no encontrar un efecto real) , y en caso de subestimar varianza estará el riesgo de encontrar falsos positivos (es decir, rechazar la hipótesis nula siendo cierta).
+
+## 9. Posibilidad de recurrir a un GLM con varianza distinta a la normal para modelar *performance_index*
+
+Sí, en algunos casos, recurrir a un GLM con varianza distinta a la normal puede ser conveniente. Esto es debido a que, usando un GLM adecuado, podemos separar la media de la varianza, permitiendo mejorar la eficiencia de los intervalos de confianza y tests.
+
+Es decir, el uso de los GLM puede ayudar en caso de problemas con heterocedasticidad marcada, valores extremos o asimetría y restricciones de la variable.
+
+
+## 10. Estrategia más adecuada
+
+En este caso, lo mejor será dejar el modelo tal cual está, ya que no tenemos grandes problemas de heterocedasticidad que puedan dar lugar a errores posteriores con tests o intervalos de confianza.
+
+De esta manera, al no haber heterocedasticidad marcada ni una gran diferencia entre residuos normales y robustos, lo mejor será mantener la regresión múltiple estándar.
+
 
 
