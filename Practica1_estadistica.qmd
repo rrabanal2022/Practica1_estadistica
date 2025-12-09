@@ -721,7 +721,6 @@ El R\^2 vale 0.3279338. Esto quiere decir que el modelo explica un 32.79% de la 
 
 ## 4. Modelo de regresión lineal múltiple
 
-
 Vamos a ajustar un modelo de regresión lineal múltiple con la variable *performance_index* explicada a partir de *training_hours*, *match_intensity* y *strength_1RM*.
 
 ```{r}
@@ -1262,7 +1261,6 @@ summary(modelo_lineal_imputado)
 
 Cambia mínimamente el intercepto, pero es un cambio demasiado pequeño como para tenerlo en cuenta. Por otro lado, la pendiente sigue igual.
 
-
 # 5. HETEROCEDASTICIDAD
 
 ## 1. Ajuste de modelo múltiple con gráfico de residuos
@@ -1279,6 +1277,7 @@ modelo_multiple5.1 <- lm(
 summary(modelo_multiple5.1)
 
 ```
+
 A continuación, vamos a disponer el gráfico de residuos vs valores ajustados.
 
 ```{r}
@@ -1307,7 +1306,6 @@ bptest(modelo_multiple5.1)
 ```
 
 El p-valor del test es muy elevado, por lo que no podemos rechazar la hipótesis de homocedasticidad. De esta manera, no podemos concluir que haya un problema de heterocedasticidad en el modelo.
-
 
 ## 3. Varianza de los residuos en la variable *fatigue*
 
@@ -1349,7 +1347,6 @@ bartlett.test(residuos ~ datos_imputados$fatigue_grupo)
 Como el p-valor es muy elevado, no podemos afirmar que la diferencia de varianzas entre los residuos sea estadísticamente significativa.
 
 ## 4. Gráfica de residuos vs *sleep_hours*
-
 
 ```{r}
 
@@ -1394,6 +1391,7 @@ comparacion <- data.frame(
 comparacion
 
 ```
+
 Vemos que los errores de los coeficientes cambian considerablemente con respecto de los del modelo original.
 
 ## 6. Transformación logarítmica al predictor *travel_km_week*
@@ -1419,6 +1417,7 @@ modelo_multiple5.6 <- lm(
 summary(modelo_multiple5.6)
 
 ```
+
 Para ver si mejora la heterocedasticidad dibujaremos la gráfica de residuos vs valores ajustados de este nuevo modelo
 
 ```{r}
@@ -1440,7 +1439,6 @@ abline(h = 0, col = "red")
 
 La gráfica es similar, pero podemos apreciar que los valores tienden a concetrarse en mayor medida en el centro de la gráfica. De esta manera, podemos intuir que se "corrige" un poco el ligero problema de heterocedasticidad que podíamos haber tenido antes.
 
-
 De todas formas, vamos a verlo con el test Breusch-Pagan
 
 ```{r}
@@ -1457,14 +1455,13 @@ Como ambos p-valores son mucho mayores que 0.05, concluimos que no hay diferenci
 
 ## 7. Estudio gráfico sobre la causa de la heterocedasticidad
 
-Tomamos en primer lugar los residuos estandarizados. 
+Tomamos en primer lugar los residuos estandarizados.
 
 ```{r}
 
 residuos5.6 <- rstandard(modelo_multiple5.6)
 
 ```
-
 
 Ahora, vamos a ver si la heterocedasticidad depende de la fatiga
 
@@ -1492,8 +1489,7 @@ abline(h = 0, col = "red")
 
 ```
 
-
-Los residuos de jugadores con pocas horas de sueño aparecen más dispersos que los valores de la anterior gráfica. 
+Los residuos de jugadores con pocas horas de sueño aparecen más dispersos que los valores de la anterior gráfica.
 
 Por tanto, podemos concluir que el efecto de la heterocedasticidad es más acusado para jugadores con pocas horas de sueño que para aquellos con mucha fatiga.
 
@@ -1513,14 +1509,8 @@ Sí, en algunos casos, recurrir a un GLM con varianza distinta a la normal puede
 
 Es decir, el uso de los GLM puede ayudar en caso de problemas con heterocedasticidad marcada, valores extremos o asimetría y restricciones de la variable.
 
-
 ## 10. Estrategia más adecuada
 
 En este caso, lo mejor será dejar el modelo tal cual está, ya que no tenemos grandes problemas de heterocedasticidad que puedan dar lugar a errores posteriores con tests o intervalos de confianza.
 
 De esta manera, al no haber heterocedasticidad marcada ni una gran diferencia entre residuos normales y robustos, lo mejor será mantener la regresión múltiple estándar.
-
-
-
-
-
