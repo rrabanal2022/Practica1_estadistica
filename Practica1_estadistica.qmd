@@ -17,7 +17,7 @@ toc-depth: 2
 
 Antes de empezar, cargamos las librerías que vamos a usar.
 
-```{r}
+```{r message=FALSE warning=FALSE}
 
 library(dplyr)
 library(mice)
@@ -28,6 +28,7 @@ library(splines)
 library(lmtest)
 library(sandwich)
 library(ggplot2)
+library(MASS)
 
 ```
 
@@ -43,7 +44,7 @@ str(datos)
 
 Vamos a realizar un pequeño análisis exploratorio de datos, atendiendo a diferentes aspectos de los mismos.
 
-## 1. Media, medianay desviación típica
+## 1. Media, mediana y desviación típica
 
 En primer lugar, calcularemos la media, la mediana y la desviación típica del índice de rendimiento de los jugadores.
 
@@ -1514,3 +1515,83 @@ Es decir, el uso de los GLM puede ayudar en caso de problemas con heterocedastic
 En este caso, lo mejor será dejar el modelo tal cual está, ya que no tenemos grandes problemas de heterocedasticidad que puedan dar lugar a errores posteriores con tests o intervalos de confianza.
 
 De esta manera, al no haber heterocedasticidad marcada ni una gran diferencia entre residuos normales y robustos, lo mejor será mantener la regresión múltiple estándar.
+
+# 6. MODELOS GLM
+
+## 1. Modelo de Poisson para *injury_count*
+
+Vamos a ajustar un modelo de Poisson para explicar la variable *injury_count* a partir de *training_hours* y *fatigue*.
+
+```{r}
+
+modelo_poisson <- glm(injuries_count ~ training_hours + fatigue,poisson(link="log"), data = datos, )
+
+summary(modelo_poisson)
+
+```
+
+Con la salida del modelo, vamos a ver si los coeficientes son significativos. Como el p-valor del intercepto es muy bajo (<0.05), significa que es significativo. Por el contrario, los otros coeficientes no lo serán, ya que su p-valor asociado es >0.05.
+
+## 2. Existencia de sobre-dispersión en el modelo de Poisson
+
+El índice de dispersión viene determinado por el cociente entre la desviación residual y los grados de libertad de los residuos.
+
+```{r}
+
+modelo_poisson$deviance / modelo_poisson$df.residual
+
+```
+
+En este caso, el índice de dispersión es 0.9772406. De esta manera, al aproximarse a 1, la dispersión que presenta el modelo es adecuada.
+
+## 3. Modelo de binomial negativa
+
+```{r}
+
+modelo_nb <- glm.nb(injuries_count ~ training_hours + fatigue, data = datos)
+summary(modelo_nb)
+
+```
+
+Para ver cual es mejor, comapararemos el AIC de los modelos
+
+```{r}
+
+AIC(modelo_poisson, modelo_nb)
+
+```
+
+Ambos valores son similares, por lo que los modelos también lo serán. Sin embargo, el AIC del modelo binomial negativo es algo menor, por lo que el modelo será algo mejor que el modelo de Poisson.
+
+## 4. Comparación de la devianza residual de los modelos de Poisson y NegBin
+
+```{r}
+
+cat("Poisson:    deviance =", deviance(modelo_poisson),
+    "  df.resid =", modelo_poisson$df.residual, "\n")
+cat("NegBin:     deviance =", deviance(modelo_nb),
+    "  df.resid =", modelo_nb$df.residual, "\n")
+
+# razón simple (devianza/df) para cada modelo
+cat("Poisson: dev/df =", deviance(modelo_poisson) / modelo_poisson$df.residual, "\n")
+cat("NegBin:  dev/df =", deviance(modelo_nb) / modelo_nb$df.residual, "\n")
+
+# diferencia de devianzas y test de razón de verosimilitud (lrtest)
+cat("Diferencia de devianzas (Poisson - NegBin) =",
+    deviance(modelo_poisson) - deviance(modelo_nb), "\n")
+
+# lrtest
+lr <- lrtest(modelo_poisson, modelo_nb)
+print(lr)
+
+```
+
+
+
+
+
+
+
+
+
+
