@@ -29,6 +29,7 @@ library(lmtest)
 library(sandwich)
 library(ggplot2)
 library(MASS)
+library(pROC)
 
 ```
 
@@ -1530,7 +1531,7 @@ summary(modelo_poisson)
 
 ```
 
-Con la salida del modelo, vamos a ver si los coeficientes son significativos. Como el p-valor del intercepto es muy bajo (<0.05), significa que es significativo. Por el contrario, los otros coeficientes no lo serán, ya que su p-valor asociado es >0.05.
+Con la salida del modelo, vamos a ver si los coeficientes son significativos. Como el p-valor del intercepto es muy bajo (\<0.05), significa que es significativo. Por el contrario, los otros coeficientes no lo serán, ya que su p-valor asociado es \>0.05.
 
 ## 2. Existencia de sobre-dispersión en el modelo de Poisson
 
@@ -1585,6 +1586,162 @@ lr <- lrtest(modelo_poisson, modelo_nb)
 print(lr)
 
 ```
+
+Vemos en la salida del test que el modelo NegBin tiene una devianza residual mucho menor que el modelo de Poisson. Esto implica que el modelo NegBin tiene un mejor ajuste que el de Poisson. Para confirmarlo, podemos ver también los ratios de devianza por cada grado de libertad (índices de devianza). Vemos que también es menor para el modelo NegBin, lo que cuadra con el resultado defendido.
+
+Finalmente, con el *lrtest*, confirmamos que el modelo NegBin es mejor que el de Poisson, al tener un p-valor menor que 0.05.
+
+
+## 5. Ratios para modelo de regresión logística
+
+En primer lugar, creamos el modelo de regresión. Usaremos el conjunto de datos *datos_imputados*, para que no haya problemas posteriores con los valores faltantes.
+
+```{r}
+
+# Ajustar modelo logístico
+modelo_starter <- glm(starter ~ training_hours + match_intensity + agility_time,
+                    family = binomial(link = "logit"),
+                    data = datos_imputados)
+
+# Ver el resumen
+summary(modelo_starter)
+
+
+```
+
+A continuación, vamos a calcular los ratios para el modelo
+
+```{r}
+
+# Odds ratios
+exp(coef(modelo_starter))
+
+# Intervalos de confianza para OR
+exp(confint(modelo_starter))
+
+
+```
+
+Teniendo los ratios, vemos que las variables *training_hours*  y *match_intensity* incrementan la posibilidad de ser jugador titular. Por otro lado, vemos que la variable *agility_time* tiene el efecto contrario. Es decir, esta variable disminiuye la probabilidad de ser titular en un partido.
+
+Sin embargo, vemos que ninguna de las variables tiene un efecto significativo sobre la posibilidad de ser titular en un partido. Esto se debe a que los intervalos de confianza de todas las variables incluyen el valor 1. De esta manera, a pesar de poder influir, no lo hacen de forma estadísticamente significativa.
+
+
+## 6. Representación de curva ROC y cálculo del AUC
+
+En primer lugar, vamos a calcular las probabilidades predichas
+
+```{r}
+
+prob_pred <- predict(modelo_starter, type = "response")
+
+```
+
+A continuación, podemos crear la curva ROC.
+
+```{r}
+
+roc_obj <- roc(datos_imputados$starter, prob_pred)
+
+# Dibujar la curva
+plot(roc_obj, main = "Curva ROC - Modelo Logístico",
+     col = "blue", lwd = 2)
+abline(a=0, b=1, lty=2, col="gray")  # línea diagonal de referencia
+
+```
+
+
+Por otro lado, calcularemos el AUC.
+
+```{r}
+
+auc_val <- auc(roc_obj)
+auc_val
+
+```
+
+Vamos a añadirlo a la gráfica para ver todos los resultados en la misma iamgen y poder interpretarlos.
+
+```{r}
+
+plot(roc_obj, main = paste("Curva ROC - AUC =", round(auc_val, 3)),
+     col = "blue", lwd = 2)
+abline(a=0, b=1, lty=2, col="gray")
+
+
+```
+
+De esta manera, vemos que el área bajo la curva ROC es de 0.64. Esto implica una discriminación baja, la cual puede ser mejorable, pero ya supone un modelo no aleatorio. De esta manera, podemos distinguir en cierto modo patrones que determinarán la titularidad o la suplencia de los jugadores atendiendo a las variables que tenemos en la base de datos.
+
+
+## 7. Modelo binomial logit para la tasa de acierto en pases
+
+```{r}
+
+modelo_pases <- glm(
+  cbind(passes_success, passes_attempted - passes_success) ~ agility_time + fatigue + position,
+  family = binomial(link = "logit"),
+  data = datos
+)
+
+# Resumen del modelo
+summary(modelo_pases)
+
+```
+Con la salida del modelo, vemos que la tasa de acierto en pases viene determinada por varios factores. En particular, la variable *agility_time* influye muy negativamente en la tasa de acierto de pases. Por otro lado, la variable *fatigue* influye también negativamente, pero con un peso mucho menor.
+
+Por otro lado, vemos que el efecto de la posición no tiene por qué influir de forma estadísticamente significativa, ya que el hecho de ser portero o delantero no explica la variación de la tasa de pases (p-valores muy elevados).
+
+Finalmente, encontramos el único factor que influye positivamente, con un peso bastante alto, y es el hecho de ser centrocampista. Esta es la única posición que explica correctamente la variación de la tasa de acierto en pases.
+
+
+## 8. Qué posición tiene mayor probabilidad de completar pases exitosos
+
+Según la salida del modelo anterior, tal y como ya hemos comentado, la única posición que influye positivamente en la tasa de pases acertados es la de centrocampista. 
+
+De esta manera, la posición con mayor probabilidad de completar pases exitosos, será la de centrocampista.
+
+
+## 9. Modelo logístico incluyendo sleep_hours
+
+```{r}
+
+modelo_sleep <- glm(starter ~ sleep_group,
+                    family = binomial(link = "logit"),
+                    data = datos)
+
+# Ver resumen de los coeficientes
+summary(modelo_sleep)
+
+```
+
+Vemos que el hecho de haber dormido más de 6 horas parece que influye positivamente en la probabilidad de ser titular. Sin embargo, vemos que el p-valor del coeficiente asociado a *sleep_group* es muy elevado. De esta manera, es una variable que no explica bien la variabilidad de la variable *starter*. 
+
+Así, podemos concliur que no hay evidencia significativa de que el descanso de los jugadores influya en la posibilidad de ser titular.
+
+
+## 10. Ventajas de usar GLM frente a la regresión lineal para modelar variables como lesiones, titularidad o éxito en pases.
+
+El hecho de usar GLM supone varias ventajas frente a la regresión lineal para modelar este tipo de variables. Entre estas ventajas, encontramos el hecho de que permite modelar correctamente la distribución correcta de la variable dependiente, así como el hecho de trabajar con ratios muy útiles para variables binarias (como hemos hecho con la variable *starter*).
+
+Además, el hecho de usar GLM evita problemas de predicciones fuera de rango y errores de homocedasticidad, así como permite ajustar la varianza que depende de la media.
+
+
+# 7. INTERACCIONES
+
+## 1. Ajuste de modelo lineal para *performance_index* en función de *training_hours*X*match_intensity*
+
+Ajustamos el modelo de interacción.
+
+```{r}
+
+modelo_perf <- lm(performance_index ~ training_hours * match_intensity, data = datos)
+
+# Resumen del modelo
+summary(modelo_perf)
+
+```
+
 
 
 
