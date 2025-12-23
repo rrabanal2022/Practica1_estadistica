@@ -5,6 +5,9 @@ format:
   html:
     theme: minty
     css: estilos.css
+execute:
+  echo: false
+  warning: false
 editor: visual
 toc: true
 toc-location: left
@@ -17,7 +20,7 @@ toc-depth: 2
 
 Antes de empezar, cargamos las librerías que vamos a usar.
 
-```{r message=FALSE warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 library(dplyr)
 library(mice)
@@ -1591,7 +1594,6 @@ Vemos en la salida del test que el modelo NegBin tiene una devianza residual muc
 
 Finalmente, con el *lrtest*, confirmamos que el modelo NegBin es mejor que el de Poisson, al tener un p-valor menor que 0.05.
 
-
 ## 5. Ratios para modelo de regresión logística
 
 En primer lugar, creamos el modelo de regresión. Usaremos el conjunto de datos *datos_imputados*, para que no haya problemas posteriores con los valores faltantes.
@@ -1622,10 +1624,9 @@ exp(confint(modelo_starter))
 
 ```
 
-Teniendo los ratios, vemos que las variables *training_hours*  y *match_intensity* incrementan la posibilidad de ser jugador titular. Por otro lado, vemos que la variable *agility_time* tiene el efecto contrario. Es decir, esta variable disminiuye la probabilidad de ser titular en un partido.
+Teniendo los ratios, vemos que las variables *training_hours* y *match_intensity* incrementan la posibilidad de ser jugador titular. Por otro lado, vemos que la variable *agility_time* tiene el efecto contrario. Es decir, esta variable disminiuye la probabilidad de ser titular en un partido.
 
 Sin embargo, vemos que ninguna de las variables tiene un efecto significativo sobre la posibilidad de ser titular en un partido. Esto se debe a que los intervalos de confianza de todas las variables incluyen el valor 1. De esta manera, a pesar de poder influir, no lo hacen de forma estadísticamente significativa.
-
 
 ## 6. Representación de curva ROC y cálculo del AUC
 
@@ -1650,7 +1651,6 @@ abline(a=0, b=1, lty=2, col="gray")  # línea diagonal de referencia
 
 ```
 
-
 Por otro lado, calcularemos el AUC.
 
 ```{r}
@@ -1673,7 +1673,6 @@ abline(a=0, b=1, lty=2, col="gray")
 
 De esta manera, vemos que el área bajo la curva ROC es de 0.64. Esto implica una discriminación baja, la cual puede ser mejorable, pero ya supone un modelo no aleatorio. De esta manera, podemos distinguir en cierto modo patrones que determinarán la titularidad o la suplencia de los jugadores atendiendo a las variables que tenemos en la base de datos.
 
-
 ## 7. Modelo binomial logit para la tasa de acierto en pases
 
 ```{r}
@@ -1688,19 +1687,18 @@ modelo_pases <- glm(
 summary(modelo_pases)
 
 ```
+
 Con la salida del modelo, vemos que la tasa de acierto en pases viene determinada por varios factores. En particular, la variable *agility_time* influye muy negativamente en la tasa de acierto de pases. Por otro lado, la variable *fatigue* influye también negativamente, pero con un peso mucho menor.
 
 Por otro lado, vemos que el efecto de la posición no tiene por qué influir de forma estadísticamente significativa, ya que el hecho de ser portero o delantero no explica la variación de la tasa de pases (p-valores muy elevados).
 
 Finalmente, encontramos el único factor que influye positivamente, con un peso bastante alto, y es el hecho de ser centrocampista. Esta es la única posición que explica correctamente la variación de la tasa de acierto en pases.
 
-
 ## 8. Qué posición tiene mayor probabilidad de completar pases exitosos
 
-Según la salida del modelo anterior, tal y como ya hemos comentado, la única posición que influye positivamente en la tasa de pases acertados es la de centrocampista. 
+Según la salida del modelo anterior, tal y como ya hemos comentado, la única posición que influye positivamente en la tasa de pases acertados es la de centrocampista.
 
 De esta manera, la posición con mayor probabilidad de completar pases exitosos, será la de centrocampista.
-
 
 ## 9. Modelo logístico incluyendo sleep_hours
 
@@ -1715,17 +1713,15 @@ summary(modelo_sleep)
 
 ```
 
-Vemos que el hecho de haber dormido más de 6 horas parece que influye positivamente en la probabilidad de ser titular. Sin embargo, vemos que el p-valor del coeficiente asociado a *sleep_group* es muy elevado. De esta manera, es una variable que no explica bien la variabilidad de la variable *starter*. 
+Vemos que el hecho de haber dormido más de 6 horas parece que influye positivamente en la probabilidad de ser titular. Sin embargo, vemos que el p-valor del coeficiente asociado a *sleep_group* es muy elevado. De esta manera, es una variable que no explica bien la variabilidad de la variable *starter*.
 
 Así, podemos concliur que no hay evidencia significativa de que el descanso de los jugadores influya en la posibilidad de ser titular.
-
 
 ## 10. Ventajas de usar GLM frente a la regresión lineal para modelar variables como lesiones, titularidad o éxito en pases.
 
 El hecho de usar GLM supone varias ventajas frente a la regresión lineal para modelar este tipo de variables. Entre estas ventajas, encontramos el hecho de que permite modelar correctamente la distribución correcta de la variable dependiente, así como el hecho de trabajar con ratios muy útiles para variables binarias (como hemos hecho con la variable *starter*).
 
 Además, el hecho de usar GLM evita problemas de predicciones fuera de rango y errores de homocedasticidad, así como permite ajustar la varianza que depende de la media.
-
 
 # 7. INTERACCIONES
 
@@ -1741,11 +1737,244 @@ modelo_perf <- lm(performance_index ~ training_hours * match_intensity, data = d
 summary(modelo_perf)
 
 ```
+A partir de la salida del modelo, vemos que el valor del intercepto (es decir, el índice de rendimiento sin la influencia de otras variables) es de 41.999437. 
+
+Por otro lado, podemos ver los valores de los coeficientes asociados a *training_hours* (muy elevado y positivo) y a *match_intensity* (negativo pero de bastante menor peso). Estos indican el valor que aportan si la otra variable vale 0.
+
+Por último, encontramos el valor del coeficiente asociado a *training_hours:match_intensity*. Este tiene un valor de 0.011328. Al ser positivo, esto indica que el efecto de las horas de entrenamiento es mayor conforme incrementa el valor de *match_intensity*. Sin embargo, el p-valor nos indica que esto no es significativo, por lo que no lo consideraremos información relevante para explicar la variabilidad de *training_hours*.
 
 
+## 2. Representación de la interacción anterior para distintos niveles de *match_intensity*
+
+Empezaremos eligiendo los valores de *match_intensity* sobre los que graficaremos
+
+```{r}
+
+# Valores de intensidad (ejemplo: percentiles)
+niveles_int <- quantile(datos$match_intensity, probs = c(0.25, 0.5, 0.75),
+                         na.rm = TRUE)
+
+# Grid de valores
+newdata <- expand.grid(
+  training_hours = seq(min(datos$training_hours, na.rm = TRUE),
+                       max(datos$training_hours, na.rm = TRUE),
+                       length.out = 100),
+  match_intensity = niveles_int
+)
+
+# Predicciones
+newdata$performance_pred <- predict(modelo_perf, newdata)
+
+```
+
+A continuación, graficaremos la interacción
+
+```{r}
+
+ggplot(newdata,
+       aes(x = training_hours,
+           y = performance_pred,
+           color = factor(match_intensity))) +
+  geom_line(size = 1.2) +
+  labs(
+    x = "Training hours",
+    y = "Predicted performance index",
+    color = "Match intensity",
+    title = "Interaction between training hours and match intensity"
+  ) +
+  theme_minimal()
 
 
+```
 
+De esta manera, vemos que el coeficiente de interacción positivo se ve reflejado en el hecho de que, a mayor intensidad de partido, se estima un mayor índice de rendimiento. Sin embargo, no hay apenas diferencia, ya que, como hemos comentado previamente, el coeficiente de interacción no era estadísticamente significativo.
+
+
+## 3. Ajuste de modelo logístico para *starter* a partir de *agility_time*x*strength_1RM*
+
+Creamos el modelo logístico
+
+```{r}
+
+modelo_logit <- glm(starter ~ agility_time * strength_1RM,
+                    family = binomial(link = "logit"),
+                    data = datos)
+
+# Resumen del modelo
+summary(modelo_logit)
+
+```
+
+En el modelo podemos ver que el efecto de la interacción entre las variables *agility_time* y *strength_1RM* es positivo. Esto quiere decir que el de *agility_time* sobre la posibilidad de ser titular incrementa conforme el valor de *strength_time* es mayor. Sin embargo, una vez más el p-valor asociado a esta interacción es muy elevado, por lo que determinaremos que esta interacción no es estadísticamente significativa.
+
+
+## 4. Representación gráfica de esta interacción en función de los niveles de agilidad
+
+Seleccionamos los niveles de agilidad sobre los que graficaremos
+
+```{r}
+
+niveles_agility <- quantile(datos$agility_time, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+
+# Crear grid de valores
+newdata <- expand.grid(
+  strength_1RM = seq(min(datos$strength_1RM, na.rm = TRUE),
+                     max(datos$strength_1RM, na.rm = TRUE),
+                     length.out = 100),
+  agility_time = niveles_agility
+)
+
+# Predicciones de probabilidad
+newdata$prob <- predict(modelo_logit, newdata, type = "response")
+
+```
+
+A continuación, planteamos las gráficas correspondientes
+
+```{r}
+
+ggplot(newdata, aes(x = strength_1RM,
+                    y = prob,
+                    color = factor(agility_time))) +
+  geom_line(size = 1.2) +
+  labs(x = "Strength 1RM (kg)",
+       y = "Probability of being starter",
+       color = "Agility (s)",
+       title = "Interaction: Agility x Strength on Starter Probability") +
+  theme_minimal()
+
+
+```
+
+En este caso, volvemos a ver el mismo efecto. Como el efecto de la interacción es positivo, a mayor nivel de *agility_time*, mayor será la probabilidad de ser titular. En este caso, la diferencia es algo mayor, y se ve condicionada también por el tipo de modelo planteado (logístico).
+
+Sin embargo, los cambios son sutiles y comienzan a distinguirse con valores altos de la variable *strength_1RM*.
+
+
+## 5. Modelo binomial para la tasa de éxito de pases
+
+```{r}
+
+modelo_pases <- glm(
+  cbind(passes_success, passes_attempted - passes_success) ~ fatigue * position,
+  family = binomial(link = "logit"),
+  data = datos_imputados
+)
+
+# Resumen del modelo
+summary(modelo_pases)
+
+```
+Vamos a analizar los coeficientes obtenidos paso a paso. En primer lugar vemos que, sin factores externos, la tasa de acierto en pases (para defensas) es de un 65% aproximadamente. Por otro lado, la fatiga tiene un coeficiente asociado de valor 0.016562. Vemos que este es estadísticamente significativo, por lo que la fatiga tiene un efecto negativo de cara a la tasa de acierto de pases.
+
+Por otro lado, vemos que el resto de posiciones tienen una tasa mayor de acierto que la de los defensas, ya que sus coeficientes asociados son todos positivos, aunque vemos que no son estadísticamente significativos a la hora de determinar el valor de la tasa de pases.
+
+Por último, nos fijaremos en las interacciones. Vemos que el efecto de la fatiga sobre los porteros y delanteros es negativo de cara a la tasa de acierto en los pases (respecto a los defensas). Sin embargo, por otro lado, vemos que la fatiga influye de manera más positiva para los centrocampistas que para los defensas. Esto se debe, seguramente, a que son los encargados de crear el juego y organizarlo; especialmente en los momentos complicados y donde físicamente los jugadores están más exigidos. Así, se prevé que tomarán mejores decisiones en estos momentos que el resto de jugadores. 
+
+Sin embargo, un importante matiz a añadir es que ninguna de estas interacciones es estadísticamente significativa, al igual que en modelos anteriores. Así, nos servirá para ver cómo influye la fatiga sobre las posiciones, pero no concluirá de manera significativa la variación de la tasa de acierto de pases.
+
+Vemos el efecto de la fatiga por posición con una gráfica
+
+```{r}
+
+newdata <- expand.grid(
+  fatigue = seq(min(datos_imputados$fatigue), max(datos_imputados$fatigue), length.out = 50),
+  position = levels(datos_imputados$position)
+)
+
+# Predicciones de probabilidad
+newdata$prob <- predict(modelo_pases, newdata, type = "response")
+
+# Gráfico
+ggplot(newdata, aes(x = fatigue, y = prob, color = position)) +
+  geom_line(size = 1.2) +
+  labs(x = "Fatigue",
+       y = "Probability of successful pass",
+       color = "Position",
+       title = "Effect of fatigue on passing success by position") +
+  theme_minimal()
+
+```
+
+Vemos que se obtienen los resultados esperados, tal y como se comentó anteriormente. 
+
+
+## 6. ¿Por qué las interacciones son especialmente importantes en el ámbito deportivo?
+
+En el mundo deportivo hay una gran cantidad de variables que permiten medir y distinguir jugadores. Las variables permiten diferenciar por sí solas entre jugadores, pero normalmente todas estas vienen condicionadas por otros aspectos. Con las interacciones, podemos explicar mejor tendencias y recoger diferencias entre grupos de jugadores, ya que explica el por qué de ciertos valores y permite entender la naturaleza del juego. Así, podríamos obtener una mejora considerable en modelos predictivos.
+
+Además, hay que tener en cuenta todas las condiciones de los jugadores, ya que de cara a futuras competiciones, si queremos hacer un estudio del jugador, hay que tener todo en cuenta. Es decir, no hay que tener solo en cuenta los factores aislados, sino entender como estos se combinan y se potencian o limitan, de cara a la preparación para competiciones o para el desempeño en las mismas.
+
+
+# 8. VARIABLES CATEGÓRICAS
+
+## 1. Modelo lineal para *performance_index* a partir de *position*
+
+Ajustamos el modelo
+
+```{r}
+
+modelo_perf <- lm(performance_index ~ position, data = datos)
+
+# Resumen del modelo
+summary(modelo_perf)
+
+```
+
+Según este modelo, el puesto con mejor rendimiento en el campo es el de portero. Esto se debe a que es el único puesto con coeficiente positivo. Es decir, es la única posición con mayor índice de rendimiento que la posición de defensa.
+
+
+## 2. Añadimos *training_hours* y *match_intensity* al modelo
+
+```{r}
+
+modelo_perf2 <- lm(performance_index ~ position + training_hours + match_intensity, 
+                   data = datos)
+
+# Resumen
+summary(modelo_perf2)
+
+```
+
+Tras añadir estas variables, vemos que el efecto de la posición ha cambiado considerablemente. Ahora, la posición con peor índice de rendimiento será la de defensa, seguida de los porteros. Por otro lado, la posición de centrocampista será la segunda con mayor índice de rendimiento, únicamente superada por los delanteros.
+
+Estos cambios se deben a que ahora entran también en juego las otras variables, que afectan de manera diferente a todos estos grupos de jugadores. Esto está relacionado con la necesidad de estudiar las interacciones comentada en el apartado 8.6.
+
+
+## 3. Modelo de *performance_index* en función de los equipos
+
+Ajustamos el modelo
+
+```{r}
+
+modelo_team <- lm(performance_index ~ team, data = datos)
+
+# Resumen
+summary(modelo_team)
+
+```
+
+Vemos que los jugadores del equipo A tienen un índice de rendimiento de 58.4390 (el valor del intercepto). Por otro lado, los jugadores del equipo C tienen un valor de 1.0348 unidades mayor que el equipo A en lo referente a *performance_index* (en total tienen un valor de 59.4738). Este equipo solo se ve superado por el equipo C, con un valor de 1.4689 más que el equipo A (en total, 59.9079).
+
+De esta manera, concluiremos que el mejor equipo (por índice de rendimiento) será el equipo C, seguido de el equipo B, mientras que el equipo A será el peor de los 3.
+
+
+## 4. Introducción de *left_footed* como predictor en el modelo
+
+```{r}
+
+modelo_perf_zurdos <- lm(performance_index ~ left_footed, data = datos)
+
+# Resumen del modelo
+summary(modelo_perf_zurdos)
+
+```
+Vemos que el p-valor asociado a la variable *left_footed* es muy elevado, por lo que no hay evidencia de que los jugadores zurdos tengan un rendimiento significativamente diferente a los diestros.
+
+
+## 5. Modelo que incluye a *team* y *position*
+
+Ajustamos el modelo.
 
 
 
