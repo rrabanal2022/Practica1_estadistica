@@ -2226,3 +2226,136 @@ ggplot(datos_test, aes(x = pred_cuadratico, y = performance_index)) +
 
 
 # 10. PROYECTO INTEGRADOR
+
+## 1. Elección de la variable respuesta
+
+La variable respuesta elegida para el estudio realizado a continuación será *performance_index*.
+
+
+## 2. Hipótesis sobre los predictores
+
+A continuación, se va a plantear una lista de predictores que se han considerado adecuados para explicar la variable *performance_index*. Estas variables estarán agrupadas en varios sectores. Cada uno de ellos supone un aspecto fundamental para explicar la variable en cuestión. Así, las variables elegidas se mostrarán a continuación.
+
+En primer lugar, hemos elegido *training_hours*, *match_intensity* y *fatigue* como variables asociadas a la carga física y a la exigencia competitiva de los jugadores.
+
+Por otro lado, *sleep_hours*, *nutrition_score* y la variable *injury_count* están asociados a la nutrición, al descanso del jugador y al estado del jugador. Es decir, son variables determinantes para la recuperación y la salud de los mismos.
+
+Las últimas variables elegidas han sido *strength_1RM* y *agility_time*, que muestran las capacidades físicas de los jugadores.
+
+Con estas variables, plantearemos el primer modelo para *performance_index*.
+
+
+## 3. Exploración descriptiva
+
+Para ello, vamos a estudiar varias cosas. En primer lugar, veremos la media, desviación estándar, el mínimo, el máximo y la mediana de cada variable elegida para el modelo.
+
+```{r}
+
+datos |>
+  dplyr::select(
+    performance_index,
+    training_hours,
+    match_intensity,
+    fatigue,
+    sleep_hours,
+    nutrition_score,
+    strength_1RM,
+    agility_time,
+    injuries_count
+  ) |>
+  summarise(across(
+    everything(),
+    list(
+      mean = mean,
+      sd = sd,
+      min = min,
+      max = max,
+      median = median
+    ),
+    na.rm = TRUE
+  ))
+
+```
+
+```{r}
+
+ggplot(df, aes(x = performance_index)) +
+  geom_histogram(bins = 30) +
+  labs(title = "Distribución del Performance Index")
+
+```
+
+```{r}
+
+ggplot(df, aes(x = training_hours)) +
+  geom_histogram(bins = 30) +
+  labs(title = "Distribución de horas de entrenamiento")
+
+```
+
+(Seguir con los demás)
+
+A continuación vemos si hay outliers
+
+```{r}
+
+ggplot(df, aes(y = performance_index)) +
+  geom_boxplot() +
+  labs(title = "Boxplot del Performance Index")
+
+```
+
+```{r}
+
+ggplot(df, aes(y = fatigue)) +
+  geom_boxplot() +
+  labs(title = "Boxplot de Fatigue")
+
+```
+
+(Seguir con el resto de predictores)
+
+
+Ahora se realizará una exploración descriptiva bivariada. Con esto podremos ver relaciones preliminares.
+
+```{r}
+
+ggplot(df, aes(x = training_hours, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Training hours",
+    y = "Performance index",
+    title = "Performance vs Training hours"
+  )
+
+```
+
+(seguir con el resto de predictores)
+
+A continuación vemos las correlaciones
+
+```{r}
+
+library(corrplot)
+
+vars <- df |>
+  select(
+    performance_index,
+    training_hours,
+    match_intensity,
+    fatigue,
+    sleep_hours,
+    nutrition_score,
+    strength_1RM,
+    agility_time,
+    injuries_count
+  )
+
+corrplot(cor(vars, use = "complete.obs"), method = "color")
+
+
+```
+
+
+
