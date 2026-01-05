@@ -1737,12 +1737,12 @@ modelo_perf <- lm(performance_index ~ training_hours * match_intensity, data = d
 summary(modelo_perf)
 
 ```
-A partir de la salida del modelo, vemos que el valor del intercepto (es decir, el índice de rendimiento sin la influencia de otras variables) es de 41.999437. 
+
+A partir de la salida del modelo, vemos que el valor del intercepto (es decir, el índice de rendimiento sin la influencia de otras variables) es de 41.999437.
 
 Por otro lado, podemos ver los valores de los coeficientes asociados a *training_hours* (muy elevado y positivo) y a *match_intensity* (negativo pero de bastante menor peso). Estos indican el valor que aportan si la otra variable vale 0.
 
 Por último, encontramos el valor del coeficiente asociado a *training_hours:match_intensity*. Este tiene un valor de 0.011328. Al ser positivo, esto indica que el efecto de las horas de entrenamiento es mayor conforme incrementa el valor de *match_intensity*. Sin embargo, el p-valor nos indica que esto no es significativo, por lo que no lo consideraremos información relevante para explicar la variabilidad de *training_hours*.
-
 
 ## 2. Representación de la interacción anterior para distintos niveles de *match_intensity*
 
@@ -1789,7 +1789,6 @@ ggplot(newdata,
 
 De esta manera, vemos que el coeficiente de interacción positivo se ve reflejado en el hecho de que, a mayor intensidad de partido, se estima un mayor índice de rendimiento. Sin embargo, no hay apenas diferencia, ya que, como hemos comentado previamente, el coeficiente de interacción no era estadísticamente significativo.
 
-
 ## 3. Ajuste de modelo logístico para *starter* a partir de *agility_time*x*strength_1RM*
 
 Creamos el modelo logístico
@@ -1806,7 +1805,6 @@ summary(modelo_logit)
 ```
 
 En el modelo podemos ver que el efecto de la interacción entre las variables *agility_time* y *strength_1RM* es positivo. Esto quiere decir que el de *agility_time* sobre la posibilidad de ser titular incrementa conforme el valor de *strength_time* es mayor. Sin embargo, una vez más el p-valor asociado a esta interacción es muy elevado, por lo que determinaremos que esta interacción no es estadísticamente significativa.
-
 
 ## 4. Representación gráfica de esta interacción en función de los niveles de agilidad
 
@@ -1850,7 +1848,6 @@ En este caso, volvemos a ver el mismo efecto. Como el efecto de la interacción 
 
 Sin embargo, los cambios son sutiles y comienzan a distinguirse con valores altos de la variable *strength_1RM*.
 
-
 ## 5. Modelo binomial para la tasa de éxito de pases
 
 ```{r}
@@ -1865,11 +1862,12 @@ modelo_pases <- glm(
 summary(modelo_pases)
 
 ```
+
 Vamos a analizar los coeficientes obtenidos paso a paso. En primer lugar vemos que, sin factores externos, la tasa de acierto en pases (para defensas) es de un 65% aproximadamente. Por otro lado, la fatiga tiene un coeficiente asociado de valor 0.016562. Vemos que este es estadísticamente significativo, por lo que la fatiga tiene un efecto negativo de cara a la tasa de acierto de pases.
 
 Por otro lado, vemos que el resto de posiciones tienen una tasa mayor de acierto que la de los defensas, ya que sus coeficientes asociados son todos positivos, aunque vemos que no son estadísticamente significativos a la hora de determinar el valor de la tasa de pases.
 
-Por último, nos fijaremos en las interacciones. Vemos que el efecto de la fatiga sobre los porteros y delanteros es negativo de cara a la tasa de acierto en los pases (respecto a los defensas). Sin embargo, por otro lado, vemos que la fatiga influye de manera más positiva para los centrocampistas que para los defensas. Esto se debe, seguramente, a que son los encargados de crear el juego y organizarlo; especialmente en los momentos complicados y donde físicamente los jugadores están más exigidos. Así, se prevé que tomarán mejores decisiones en estos momentos que el resto de jugadores. 
+Por último, nos fijaremos en las interacciones. Vemos que el efecto de la fatiga sobre los porteros y delanteros es negativo de cara a la tasa de acierto en los pases (respecto a los defensas). Sin embargo, por otro lado, vemos que la fatiga influye de manera más positiva para los centrocampistas que para los defensas. Esto se debe, seguramente, a que son los encargados de crear el juego y organizarlo; especialmente en los momentos complicados y donde físicamente los jugadores están más exigidos. Así, se prevé que tomarán mejores decisiones en estos momentos que el resto de jugadores.
 
 Sin embargo, un importante matiz a añadir es que ninguna de estas interacciones es estadísticamente significativa, al igual que en modelos anteriores. Así, nos servirá para ver cómo influye la fatiga sobre las posiciones, pero no concluirá de manera significativa la variación de la tasa de acierto de pases.
 
@@ -1896,15 +1894,13 @@ ggplot(newdata, aes(x = fatigue, y = prob, color = position)) +
 
 ```
 
-Vemos que se obtienen los resultados esperados, tal y como se comentó anteriormente. 
-
+Vemos que se obtienen los resultados esperados, tal y como se comentó anteriormente.
 
 ## 6. ¿Por qué las interacciones son especialmente importantes en el ámbito deportivo?
 
 En el mundo deportivo hay una gran cantidad de variables que permiten medir y distinguir jugadores. Las variables permiten diferenciar por sí solas entre jugadores, pero normalmente todas estas vienen condicionadas por otros aspectos. Con las interacciones, podemos explicar mejor tendencias y recoger diferencias entre grupos de jugadores, ya que explica el por qué de ciertos valores y permite entender la naturaleza del juego. Así, podríamos obtener una mejora considerable en modelos predictivos.
 
 Además, hay que tener en cuenta todas las condiciones de los jugadores, ya que de cara a futuras competiciones, si queremos hacer un estudio del jugador, hay que tener todo en cuenta. Es decir, no hay que tener solo en cuenta los factores aislados, sino entender como estos se combinan y se potencian o limitan, de cara a la preparación para competiciones o para el desempeño en las mismas.
-
 
 # 8. VARIABLES CATEGÓRICAS
 
@@ -1923,7 +1919,6 @@ summary(modelo_perf)
 
 Según este modelo, el puesto con mejor rendimiento en el campo es el de portero. Esto se debe a que es el único puesto con coeficiente positivo. Es decir, es la única posición con mayor índice de rendimiento que la posición de defensa.
 
-
 ## 2. Añadimos *training_hours* y *match_intensity* al modelo
 
 ```{r}
@@ -1939,7 +1934,6 @@ summary(modelo_perf2)
 Tras añadir estas variables, vemos que el efecto de la posición ha cambiado considerablemente. Ahora, la posición con peor índice de rendimiento será la de defensa, seguida de los porteros. Por otro lado, la posición de centrocampista será la segunda con mayor índice de rendimiento, únicamente superada por los delanteros.
 
 Estos cambios se deben a que ahora entran también en juego las otras variables, que afectan de manera diferente a todos estos grupos de jugadores. Esto está relacionado con la necesidad de estudiar las interacciones comentada en el apartado 8.6.
-
 
 ## 3. Modelo de *performance_index* en función de los equipos
 
@@ -1958,7 +1952,6 @@ Vemos que los jugadores del equipo A tienen un índice de rendimiento de 58.4390
 
 De esta manera, concluiremos que el mejor equipo (por índice de rendimiento) será el equipo C, seguido de el equipo B, mientras que el equipo A será el peor de los 3.
 
-
 ## 4. Introducción de *left_footed* como predictor en el modelo
 
 ```{r}
@@ -1969,15 +1962,267 @@ modelo_perf_zurdos <- lm(performance_index ~ left_footed, data = datos)
 summary(modelo_perf_zurdos)
 
 ```
-Vemos que el p-valor asociado a la variable *left_footed* es muy elevado, por lo que no hay evidencia de que los jugadores zurdos tengan un rendimiento significativamente diferente a los diestros.
 
+Vemos que el p-valor asociado a la variable *left_footed* es muy elevado, por lo que no hay evidencia de que los jugadores zurdos tengan un rendimiento significativamente diferente a los diestros.
 
 ## 5. Modelo que incluye a *team* y *position*
 
 Ajustamos el modelo.
 
+```{r}
+
+# Modelo lineal con team y position
+modelo_team_position <- lm(performance_index ~ team + position, data = datos)
+
+# Resumen
+summary(modelo_team_position)
+
+
+```
+
+A partir de la salida del modelo, podemos concluir que los coeficientes de los equipos tienen un valor menor que en el modelo que solo incluía a los equipos, por lo que podemos ver que tendrá un menor peso sobre el índice de rendimiento que en el modelo previo. Sin embargo, las diferencias no son notables a simple vista. Asimismo, el intercepto también es algo menor que en este modelo.
+
+Por otro lado, comparando el modelo con aquel que solo incluía las posiciones, encontramos un efecto similar. Los coeficientes (tanto los de los valores de las variables categóricas como el intercepto) tenián un valor mayor, dando a entender que en este modelo conjunto tienen un menor peso que por separado. 
+
+Aún así, no podemos concluir que haya evidencias notables con los otros modelos. Simplemente hay pequeños cambios que implican un menor peso para los valores de las variables.
+
+
+## 6. Gráfico de cajas de *performance_index* por posición
+
+Representamos el gráfico
+
+```{r}
+
+ggplot(datos, aes(x = position, y = performance_index, fill = position)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    x = "Position",
+    y = "Performance index",
+    title = "Distribution of performance index by position"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+En el gráfico representado vemos los resultados esperados por los modelos anteriores. Es decir, la posición *defender* tiene la mediana en torno al valor 59 de *performance_index*, que se corresponde con el valor del intercepto del modelo. Por otro lado, la posición *forward* parece suponer un valor más elevado de esta variable, lo cual coincide con el modelo.
+
+En cuanto a la posición *goalkeeper*, es en la única que podemos encontrar discrepancias. Esto se debe al valor negativo del coeficiente asociado a esta posición en el modelo por posiciones, frente al hecho de la distribución encontrada en el gráfico. Sin embargo, podemos asociar este hecho al elevado p-valor del modelo.
+
+Por último, la posición *midfielder* también se ajusta a lo visto anteriormente en el modelo, presentando valores ligeramente inferiores a los defensas.
+
+
+# 9. EVALUACIÓN Y COMPARACIÓN DE MODELOS
+
+## 1. División del dataset
+
+Vamos a dividir el conjunto de datos en un conjunto de entrenamiento del 70% y un conjunto de prueba del 30%.
+
+```{r}
+
+set.seed(123)  # Para reproducibilidad
+
+n <- nrow(datos)
+
+# Índices aleatorios para entrenamiento
+train_index <- sample(seq_len(n), size = 0.7 * n)
+
+# Conjuntos
+datos_train <- datos[train_index, ]
+datos_test  <- datos[-train_index, ]
+
+```
+
+
+## 2. Modelo para *performance_index* a partir de *training_hours*
+
+Ajustamos el modelo
+
+```{r}
+
+modelo_simple <- lm(performance_index ~ training_hours, data = datos_train)
+
+summary(modelo_simple)
+
+
+```
+
+## 3. Modelo múltiple de *performance_index* con términos cuadráticos
+
+Ajustamos el modelo
+
+```{r}
+
+modelo_cuadratico <- lm(
+  performance_index ~ training_hours + I(training_hours^2) +
+    match_intensity + fatigue,
+  data = datos_train
+)
+
+summary(modelo_cuadratico)
+
+
+```
+
+## 4. Cálculo de RMSE y MAE de los modelos en el conjunto de prueba
+
+En primer lugar, hacemos las predicciones
+
+```{r}
+
+# Predicciones
+pred_simple <- predict(modelo_simple, newdata = datos_test)
+pred_cuadratico <- predict(modelo_cuadratico, newdata = datos_test)
+
+
+```
+
+A continuación, calculamos el RMSE y el MAE
+
+```{r}
+
+# Funciones
+rmse <- function(obs, pred) {
+  sqrt(mean((obs - pred)^2, na.rm = TRUE))
+}
+
+mae <- function(obs, pred) {
+  mean(abs(obs - pred), na.rm = TRUE)
+}
+
+# Métricas
+rmse_simple <- rmse(datos_test$performance_index, pred_simple)
+mae_simple  <- mae(datos_test$performance_index, pred_simple)
+
+rmse_cuad <- rmse(datos_test$performance_index, pred_cuadratico)
+mae_cuad  <- mae(datos_test$performance_index, pred_cuadratico)
+
+
+```
+
+A continuación, comparamos los resultados
+
+```{r}
+
+resultados <- data.frame(
+  Modelo = c("Lineal simple", "Cuadrático múltiple"),
+  RMSE = c(rmse_simple, rmse_cuad),
+  MAE  = c(mae_simple, mae_cuad)
+)
+
+resultados
+
+
+```
+
+Vemos que tanto el RMSE como el MAE del modelo lineal simple es mayor que el del modelo cuadrático simple.
+
+De esta manera, el modelo cuadrático será mejor que el simple.
+
+
+## 5. Comparación de modelos con AIC y BIC
+
+Calculamos el AIC y el BIC de ambos modelos
+
+```{r}
+
+AIC(modelo_simple, modelo_cuadratico)
+BIC(modelo_simple, modelo_cuadratico)
+
+
+```
+
+Tanto el AIC como el BIC del modelo cuadrático son menores. Esto, de la misma manera que el RMSE y el MAE, indican que el modelo cuadrático es mejor modelo que el simple.
+
+
+## 6. Modelo con variables categóricas
+
+Ajustamos el modelo
+
+```{r}
+
+modelo_completo <- lm(
+  performance_index ~ training_hours + match_intensity + fatigue +
+    position + team,
+  data = datos_train
+)
+
+summary(modelo_completo)
+
+
+```
+
+Para ver si mejora el ajuste, lo compararemos el RMSE, el MAE, el BIC y el AIC con los modelos anteriores.
+
+En primer lugar, hacemos la predicción a partir de este modelo en el conjunto de prueba
+
+```{r}
+
+pred_completa <- predict(modelo_completo, newdata = datos_test)
+
+```
+
+Por otro lado, calcularemos el RMSE y el MAE de la predicción con el nuevo modelo
+
+```{r}
+
+rmse_completo <- rmse(datos_test$performance_index, pred_completa)
+mae_completo  <- mae(datos_test$performance_index, pred_completa)
+
+```
+
+Con esto, podemos compararlo con el RMSE y el MAE de los otros modelos
+
+```{r}
+
+resultados <- data.frame(
+  Modelo = c("Lineal simple", "Cuadrático múltiple", "Completo"),
+  RMSE = c(rmse_simple, rmse_cuad, rmse_completo),
+  MAE  = c(mae_simple, mae_cuad, mae_completo)
+)
+
+resultados
+
+```
+
+Vemos que el RMSE y el MAE de este modelo completo es mayor que el de los otros dos, por lo que entendemos que será peor modelo.
+
+Para terminar la comparación, estudiaremos el AIC y el BIC
+
+```{r}
+
+AIC(modelo_simple, modelo_cuadratico, modelo_completo)
+BIC(modelo_simple, modelo_cuadratico, modelo_completo)
+
+```
+
+Vemos que el AIC y el BIC de este modelo son mayores que los del cuadrático. Así, el mejor modelo seguirá siendo el cuadrático, por lo que la introducción de las variables categóricas no mejora el ajuste.
+
+
+## 7. Representación gráfica de las predicciones vs valores reales
+
+Como el mejor modelo es el cuadrático, representaremos las predicciones sobre ese modelo.
+
+```{r}
+
+ggplot(datos_test, aes(x = pred_cuadratico, y = performance_index)) +
+  geom_point(alpha = 0.6) +
+  geom_abline(
+    intercept = 0,
+    slope = 1,
+    color = "red",
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+  labs(
+    x = "Predicción performance_index",
+    y = "Observaciones performance_index",
+    title = "Predicciones vs observaciones performance_index (Quadratic model – Test set)"
+  ) +
+  theme_minimal()
+
+```
 
 
 
-
-
+# 10. PROYECTO INTEGRADOR
