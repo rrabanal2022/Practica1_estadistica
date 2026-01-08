@@ -33,6 +33,7 @@ library(sandwich)
 library(ggplot2)
 library(MASS)
 library(pROC)
+library(DescTools)
 
 ```
 
@@ -2238,7 +2239,7 @@ A continuación, se va a plantear una lista de predictores que se han considerad
 
 En primer lugar, hemos elegido *training_hours*, *match_intensity* y *fatigue* como variables asociadas a la carga física y a la exigencia competitiva de los jugadores.
 
-Por otro lado, *sleep_hours*, *nutrition_score* y la variable *injury_count* están asociados a la nutrición, al descanso del jugador y al estado del jugador. Es decir, son variables determinantes para la recuperación y la salud de los mismos.
+Por otro lado, *sleep_hours*, *nutrition_score* y la variable *previous_injuries* están asociados a la nutrición, al descanso del jugador y al estado del jugador. Es decir, son variables determinantes para la recuperación y la salud de los mismos.
 
 Las últimas variables elegidas han sido *strength_1RM* y *agility_time*, que muestran las capacidades físicas de los jugadores.
 
@@ -2246,6 +2247,8 @@ Con estas variables, plantearemos el primer modelo para *performance_index*.
 
 
 ## 3. Exploración descriptiva
+
+### Media, mediana, desviación estándar, máximo y mínimo de las variables
 
 Para ello, vamos a estudiar varias cosas. En primer lugar, veremos la media, desviación estándar, el mínimo, el máximo y la mediana de cada variable elegida para el modelo.
 
@@ -2277,61 +2280,1781 @@ datos |>
 
 ```
 
+Una vez vistos estos valores, como disponemos de variables continuas, vamos a estudiar su distribución.
+
+### Distribuciones de las variables
+
+#### *performance_index*
+
+En primer lugar, veremos la de la variable *performance_index*
+
 ```{r}
 
-ggplot(df, aes(x = performance_index)) +
-  geom_histogram(bins = 30) +
-  labs(title = "Distribución del Performance Index")
+ggplot(datos, aes(x = performance_index)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución del Performance Index",
+    x = "Performance Index",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Vemos que tenemos una distribución aproximadamente normal. Esto nos hará decantarnos, a priori, por una regresión lineal. 
+
+Sin embargo, nos falta todavía estudiar la distribución del resto de predictores, para entender su naturaleza y detectar posibles problemas y transformaciones. 
+
+#### *training_hours*
+
+```{r}
+
+ggplot(datos, aes(x = training_hours)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución de las horas de entrenamiento",
+    x = "training_hours",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
 
 ```
 
+Una vez más, la distribución es aproximadamente normal. Por tanto, trabajaremos con esta variable sin aplicar transformaciones, al no encontrar situaciones preocupantes.
+
+#### *match_intensity*
+
 ```{r}
 
-ggplot(df, aes(x = training_hours)) +
-  geom_histogram(bins = 30) +
-  labs(title = "Distribución de horas de entrenamiento")
+ggplot(datos, aes(x = match_intensity)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución de intensidad de los partidos",
+    x = "match_intensity",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
 
 ```
 
-(Seguir con los demás)
+Una vez más, la distribución es aproximadamente normal. Por tanto, trabajaremos con esta variable sin aplicar transformaciones, al no encontrar situaciones preocupantes.
 
-A continuación vemos si hay outliers
+#### *fatigue*
 
 ```{r}
 
-ggplot(df, aes(y = performance_index)) +
-  geom_boxplot() +
-  labs(title = "Boxplot del Performance Index")
+ggplot(datos, aes(x = fatigue)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución de la fatiga",
+    x = "fatigue",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
 
 ```
 
+En este caso, la distribución parece una normal bimodal. Vamos a ajustar un gráfico LOESS para ver si la relación no es lineal con *performance_index*
+
 ```{r}
 
-ggplot(df, aes(y = fatigue)) +
-  geom_boxplot() +
-  labs(title = "Boxplot de Fatigue")
+ggplot(datos, aes(x = fatigue, y = performance_index)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "loess")
+
 
 ```
 
-(Seguir con el resto de predictores)
+Con este gráfico vemos que, efectivamente, la relación no es lineal. Así, la fatiga tiene zonas de picos con el rendimiento, difícilmente recogibles con una relación lineal.
 
-
-Ahora se realizará una exploración descriptiva bivariada. Con esto podremos ver relaciones preliminares.
+#### *sleep_hours*
 
 ```{r}
 
-ggplot(df, aes(x = training_hours, y = performance_index)) +
+ggplot(datos, aes(x = sleep_hours)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución de horas de sueño",
+    x = "sleep_hours",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+Una vez más, la distribución es aproximadamente normal. Por tanto, trabajaremos con esta variable sin aplicar transformaciones, al no encontrar situaciones preocupantes.
+
+#### *nutrition_score*
+
+```{r}
+
+ggplot(datos, aes(x = nutrition_score)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución de la puntuación de la nutrición",
+    x = "nutrition_score",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+En este caso encontramos una distribución con valores muy dispares. Podemos intuir una leve distribución normal, pero por si acaso vamos a ver el *QQ-plot* de esta variable.
+
+```{r}
+
+ggplot(datos, aes(sample = nutrition_score)) +
+  stat_qq(color = "#2C7FB8", alpha = 0.6) +
+  stat_qq_line(color = "#D95F0E", linewidth = 1) +
+  labs(
+    title = "Q–Q plot de nutrition_score",
+    x = "Cuantiles teóricos",
+    y = "Cuantiles muestrales"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+
+```
+
+Como vemos, las observaciones siguen la línea del *QQ-plot*, exceptuando algunas en las colas que pueden ser las culpables de alterar la normalidad en el histograma. Sin embargo, si quitamos estas pocas observaciones, el resto presentan una normalidad muy marcada.
+
+#### *previous_injuries*
+
+```{r}
+
+ggplot(datos, aes(x = previous_injuries)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución del número de lesiones previas",
+    x = "previous_injuries",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+En este caso, tenemos una variable entera, donde la mayoría de observaciones son de valor 0. La distribución es la esperada, pero para hacernos una idea de los jugadores con lesiones, vamos a mirar el porcentaje de jugadores sin lesiones y el porcentaje de jugadores que ha sufrido alguna lesión.
+
+```{r}
+
+# Total de observaciones
+total <- nrow(datos)
+
+# Observaciones donde injuries_count es 0
+porc_cero <- sum(datos$previous_injuries == 0) / total * 100
+
+# Observaciones donde injuries_count es distinto de 0
+porc_distinto_cero <- sum(datos$previous_injuries != 0) / total * 100
+
+porc_cero
+porc_distinto_cero
+
+
+```
+
+Así, el 28.21497% de los jugadores no han sufrido ninguna lesión, mientras que el 71.78503% restante sí. A continuación, veremos el porcentaje de cada valor, dentro del grupo de jugadores que ha sufrido alguna lesión.
+
+```{r}
+
+datos %>%
+  filter(previous_injuries != 0) %>%
+  group_by(previous_injuries) %>%
+  summarise(count = n()) %>%
+  mutate(porcentaje = count / sum(count) * 100)
+
+
+```
+
+Estos son los porcentajes de cada valor del grupo de jugadores con lesiones previas. Si hiciésemos la distribución de este grupo, obtendríamos una similar a la de la población general, pero empezando en el 1.
+
+Cabe destacar la presencia de posibles *outliers*, ya que hay jugadores con valores muy elevados de lesiones previas.
+
+Por último, vamos a aplicar una transformación por el logaritmo, con fin de lograr la normalidad.
+
+```{r}
+
+datos$previous_injuries_log <- log(datos$previous_injuries +1)
+
+ggplot(datos, aes(x = previous_injuries_log)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución del logaritmo de lesiones previas",
+    x = "previous_injuries_log",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+No hemos logrado demasiado, debido a los pocos valores elevados, y al alto número de observaciones en el valor 0.
+
+#### *strength_1RM*
+
+```{r}
+
+ggplot(datos, aes(x = strength_1RM)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución de la fuerza de los jugadores",
+    x = "strength_1RM",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+Una vez más, la distribución es aproximadamente normal. Por tanto, trabajaremos con esta variable sin aplicar transformaciones, al no encontrar situaciones preocupantes.
+
+#### *agility_time*
+
+```{r}
+
+ggplot(datos, aes(x = agility_time)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30,
+    fill = "#69b3a2",
+    color = "white",
+    alpha = 0.7
+  ) +
+  geom_density(
+    color = "#1f4e5f",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Distribución del tiempo en test de agilidad",
+    x = "agility_time",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+
+Una vez más, la distribución es aproximadamente normal. Por tanto, trabajaremos con esta variable sin aplicar transformaciones, al no encontrar situaciones preocupantes.
+
+### Outliers
+
+A continuación vemos si hay outliers. Empezaremos con la variable respuesta *performance_index*
+
+#### *performance_index*
+
+```{r}
+
+outliers <- boxplot.stats(datos$performance_index)$out
+outlier_data <- datos %>% filter(performance_index %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = performance_index)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = performance_index), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = performance_index, label = round(performance_index, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado del Performance Index",
+    y = "Performance Index",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay unos cuantos ouliers de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$performance_index)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!performance_index %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$performance_index)
+mediana_con <- median(datos$performance_index)
+
+media_sin <- mean(datos_sin_outliers$performance_index)
+mediana_sin <- median(datos_sin_outliers$performance_index)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE)) -
+                        mean(sample(y, length(y), replace = TRUE)))
+  mean(diffs >= (mean(x) - mean(y)))
+}
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$performance_index, datos_sin_outliers$performance_index)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE)) -
+                        median(sample(y, length(y), replace = TRUE)))
+  mean(diffs >= (median(x) - median(y)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$performance_index, datos_sin_outliers$performance_index)
+p_valor_mediana
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *training_hours*
+
+```{r}
+
+outliers <- boxplot.stats(datos$training_hours)$out
+outlier_data <- datos %>% filter(training_hours %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = training_hours)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = training_hours), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = training_hours, label = round(training_hours, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de training_hours",
+    y = "training_hours",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay unos cuantos ouliers de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$training_hours)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!training_hours %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$training_hours, na.rm = TRUE)
+mediana_con <- median(datos$training_hours, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$training_hours, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$training_hours, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$training_hours, datos_sin_outliers$training_hours)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        median(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (median(x, na.rm = TRUE) - median(y, na.rm = TRUE)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$training_hours, datos_sin_outliers$training_hours)
+p_valor_mediana
+
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *match_intensity*
+
+```{r}
+
+outliers <- boxplot.stats(datos$match_intensity)$out
+outlier_data <- datos %>% filter(match_intensity %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = match_intensity)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = match_intensity), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = match_intensity, label = round(match_intensity, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de match_intensity",
+    y = "match_intensity",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay unos dos *ouliers* de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$match_intensity)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!match_intensity %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$match_intensity, na.rm = TRUE)
+mediana_con <- median(datos$match_intensity, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$match_intensity, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$match_intensity, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$match_intensity, datos_sin_outliers$match_intensity)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        median(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (median(x, na.rm = TRUE) - median(y, na.rm = TRUE)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$match_intensity, datos_sin_outliers$match_intensity)
+p_valor_mediana
+
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *fatigue*
+
+```{r}
+
+outliers <- boxplot.stats(datos$fatigue)$out
+outlier_data <- datos %>% filter(fatigue %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = fatigue)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = fatigue), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = fatigue, label = round(fatigue, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de fatigue",
+    y = "fatigue",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay un oulier de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$fatigue)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!fatigue %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$fatigue, na.rm = TRUE)
+mediana_con <- median(datos$fatigue, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$fatigue, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$fatigue, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$fatigue, datos_sin_outliers$fatigue)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        median(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (median(x, na.rm = TRUE) - median(y, na.rm = TRUE)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$fatigue, datos_sin_outliers$fatigue)
+p_valor_mediana
+
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *sleep_hours*
+
+```{r}
+
+outliers <- boxplot.stats(datos$sleep_hours)$out
+outlier_data <- datos %>% filter(sleep_hours %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = sleep_hours)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = sleep_hours), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = sleep_hours, label = round(sleep_hours, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de sleep_hours",
+    y = "sleep_hours",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay unos cuantos ouliers de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$sleep_hours)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!sleep_hours %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$sleep_hours, na.rm = TRUE)
+mediana_con <- median(datos$sleep_hours, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$sleep_hours, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$sleep_hours, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$sleep_hours, datos_sin_outliers$sleep_hours)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        median(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (median(x, na.rm = TRUE) - median(y, na.rm = TRUE)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$sleep_hours, datos_sin_outliers$sleep_hours)
+p_valor_mediana
+
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *nutrition_score*
+
+```{r}
+
+outliers <- boxplot.stats(datos$nutrition_score)$out
+outlier_data <- datos %>% filter(nutrition_score %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = nutrition_score)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = nutrition_score), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = nutrition_score, label = round(nutrition_score, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de nutrition_score",
+    y = "nutrition_score",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay un oulier de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$nutrition_score)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!nutrition_score %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$nutrition_score, na.rm = TRUE)
+mediana_con <- median(datos$nutrition_score, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$nutrition_score, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$nutrition_score, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$nutrition_score, datos_sin_outliers$nutrition_score)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        median(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (median(x, na.rm = TRUE) - median(y, na.rm = TRUE)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$nutrition_score, datos_sin_outliers$nutrition_score)
+p_valor_mediana
+
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *previous_injuries*
+
+```{r}
+
+outliers <- boxplot.stats(datos$previous_injuries)$out
+outlier_data <- datos %>% filter(previous_injuries %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = previous_injuries)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = previous_injuries), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = previous_injuries, label = round(previous_injuries, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de previous_injuries",
+    y = "previous_injuries",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay unos cuantos ouliers de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$previous_injuries)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!previous_injuries %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$previous_injuries, na.rm = TRUE)
+mediana_con <- median(datos$previous_injuries, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$previous_injuries, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$previous_injuries, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$previous_injuries, datos_sin_outliers$previous_injuries)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, la mediana es exactamente la misma, por lo que no haremos test en esta ocasión.
+
+
+#### *strength_1RM*
+
+```{r}
+
+outliers <- boxplot.stats(datos$strength_1RM)$out
+outlier_data <- datos %>% filter(strength_1RM %in% outliers)
+
+datos$x <- 1
+outlier_data$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = strength_1RM)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = strength_1RM), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = strength_1RM, label = round(strength_1RM, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de strength_1RM",
+    y = "strength_1RM",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que hay unos cuantos ouliers de esta variable. Vamos a ver si los valores de la media y de la mediana varían mucho sin *outliers* frente a los obtenidos con *outliers*.
+
+```{r}
+
+outliers <- boxplot.stats(datos$strength_1RM)$out
+
+# Dataframe sin outliers
+datos_sin_outliers <- datos %>% filter(!strength_1RM %in% outliers)
+
+# Calcular estadísticas
+media_con <- mean(datos$strength_1RM, na.rm = TRUE)
+mediana_con <- median(datos$strength_1RM, na.rm = TRUE)
+
+media_sin <- mean(datos_sin_outliers$strength_1RM, na.rm = TRUE)
+mediana_sin <- median(datos_sin_outliers$strength_1RM, na.rm = TRUE)
+
+# Crear tabla 2x2
+tabla_2x2 <- data.frame(
+  Estadística = c("Media", "Mediana"),
+  Con_Outliers = c(media_con, mediana_con),
+  Sin_Outliers = c(media_sin, mediana_sin)
+)
+
+# Mostrar la tabla
+tabla_2x2
+
+```
+
+Vamos a ver si la diferencia de medias es estadísticamente significativa con un test bootstrap.
+
+```{r}
+
+set.seed(123)
+
+# Función para bootstrap
+bootstrap_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, mean(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        mean(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (mean(x, na.rm = TRUE) - mean(y, na.rm = TRUE)))
+}
+
+
+# P-valor aproximado
+p_valor <- bootstrap_diff(datos$strength_1RM, datos_sin_outliers$strength_1RM)
+p_valor
+
+
+```
+El p-valor es muy elevado, por lo que conluímos que no lo es.
+
+Por otro lado, hacemos lo propio para la mediana.
+
+```{r}
+
+set.seed(123)
+
+bootstrap_median_diff <- function(x, y, n = 10000) {
+  x <- na.omit(x)
+  y <- na.omit(y)
+  diffs <- replicate(n, median(sample(x, length(x), replace = TRUE), na.rm = TRUE) -
+                        median(sample(y, length(y), replace = TRUE), na.rm = TRUE))
+  mean(diffs >= (median(x, na.rm = TRUE) - median(y, na.rm = TRUE)))
+}
+
+p_valor_mediana <- bootstrap_median_diff(datos$strength_1RM, datos_sin_outliers$strength_1RM)
+p_valor_mediana
+
+
+
+```
+
+Una vez más, el p-valor es muy elevado, por lo que concluímos que la diferencia tampoco será estadísticamente significativa.
+
+#### *agility_time*
+
+```{r}
+
+outliers <- boxplot.stats(datos$agility_time)$out
+outlier_data <- datos %>% filter(agility_time %in% outliers)
+
+datos$x <- 1
+
+ggplot(datos, aes(x = factor(x),y = agility_time)) +
+  geom_boxplot(aes(fill = after_stat(..middle..)), color = "#1f3552", outlier.shape = NA, width = 0.4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +  # gradiente según mediana
+  geom_jitter(width = 0.15, alpha = 0.4, color = "#404080", size = 2) +  # puntos dispersos
+  geom_point(data = outlier_data, aes(y = agility_time), color = "red", size = 3, shape = 16) +  # outliers destacados
+  geom_text(data = outlier_data, aes(y = agility_time, label = round(agility_time, 2)), 
+            color = "red", vjust = -1, size = 3) +  # etiquetas de outliers
+  labs(
+    title = "Boxplot Avanzado de agility_time",
+    y = "agility_time",
+    x = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16),
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+Vemos que esta variable no tiene *outliers*. Por tanto, no haremos el estudio que hicimos para el resto de variables.
+
+### Exploración descriptiva bivariada
+
+Ahora se realizará una exploración descriptiva bivariada. Con esto podremos ver relaciones entre la variable respuesta y los predictores, así como una detección de *outliers* que perjudiquen las relaciones y detectar problemas de multicolinealidad (entre otros aspectos).
+
+#### Relaciones de *performance_index* con los predictores
+
+##### *training_hours*
+
+```{r}
+
+ggplot(datos, aes(x = training_hours, y = performance_index)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(method = "loess", se = FALSE) +
   labs(
     x = "Training hours",
     y = "Performance index",
     title = "Performance vs Training hours"
   )
 
+
 ```
 
-(seguir con el resto de predictores)
+Vemos que la relación entre estas variables parece lineal, con tendencia creciente. Vamos a ver si existen *outliers* influyentes en la relación.
+
+```{r}
+
+ggplot(datos, aes(training_hours, performance_index)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_ellipse(level = 0.95) +
+  theme_minimal()
+
+
+```
+Las observaciones que quedan fuera de la elipse son posibles *outliers* de esta relación. En particular, vamos a ver aquellos influyentes.
+
+```{r}
+modelo <- lm(performance_index ~ training_hours, data = datos)
+cooks <- cooks.distance(modelo)
+which(cooks > 4 / length(cooks))
+
+```
+Estos índices podrían influir de forma elevada en el ajuste de la relación lineal.
+
+Vamos a calcular el coeficiente de correlación de Pearson para esta relación.
+
+```{r}
+
+cor(datos$training_hours, datos$performance_index,
+    use = "complete.obs", method = "pearson")
+
+```
+El coeficiente tiene un valor de 0.5813298, lo cual es bastante elevado. 
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal entre *training_hours* y *performance_index*. No se observaron patrones no lineales marcados, aunque se detectaron varias observaciones con influencia elevada en el ajuste lineal.
+
+##### *match_intensity*
+
+```{r}
+
+ggplot(datos, aes(x = match_intensity, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "match_intensity",
+    y = "Performance index",
+    title = "Performance vs intensidad del partido"
+  )
+
+
+```
+
+Vemos que no podemos afirmar demasiado sobre esta relación. Vamos a ver si existen *outliers* influyentes en la relación con un gráfico de densidad.
+
+
+```{r}
+
+ggplot(datos, aes(match_intensity, performance_index)) +
+  stat_density_2d(aes(fill = after_stat(level)), geom = "polygon", alpha = 0.6) +
+  geom_point(alpha = 0.1) +
+  theme_minimal()
+
+
+```
+
+Las observaciones que quedan fuera de la elipse son posibles *outliers* de esta relación. En particular, vamos a ver aquellos influyentes.
+
+Vamos a calcular el coeficiente de correlación de Spearman para esta relación, ya que no hay linealidad aparente.
+
+```{r}
+
+cor(datos$match_intensity, datos$performance_index,
+    use = "complete.obs", method = "spearman")
+
+```
+El coeficiente tiene un valor de 0.09848997, lo cual es bastante pequeño, indicando una correlación muy leve. 
+
+De esta manera, la exploración bivariada no permitió identificar una relación clara entre *match_intensity* y *performance_index*, ya que son variables poco correlacionadas y donde no se puede apreciar con claridad el tipo de relación.
+
+##### *fatigue*
+
+```{r}
+
+ggplot(datos, aes(x = fatigue, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Fatigue",
+    y = "Performance index",
+    title = "Performance vs fatiga"
+  )
+
+
+```
+
+Vemos que la relación entre estas variables parece lineal en 2 trozos. Primero, con una tendencia neutra. Sin embargo, la tendencia a partir del valor 60 de fatiga parece resultar negativa. Es decir, a mayor fatiga (a partir del valor 60), menor rendimiento.
+
+Para corroborarlo, vamos a calcular la media del índice de rendimiento para los jugadores con un valor de fatiga menor que 60, y para aquellos con un valor mayor que 60.
+
+```{r}
+
+cut_fatigue <- cut(datos$fatigue, breaks = c(-Inf, 60, Inf))
+tapply(datos$performance_index, cut_fatigue, mean)
+
+
+```
+Vemos que los valores obtenidos son muy dispares. Por ende, vamos a plantear un test para ver si la diferencia es estadísticamente significativa.
+
+```{r}
+
+grupo <- ifelse(datos$fatigue <= 60, "low_mid", "high")
+t.test(datos$performance_index ~ grupo)
+
+
+```
+Vemos que el p-valor es muy pequeño, por lo que concluimos que la diferencia de estas medias es estadísticamente significativa.
+
+Vemos un boxplot de ambos grupos en función de su índice de rendimiento.
+
+```{r}
+
+boxplot(datos$performance_index ~ grupo, outline = TRUE)
+
+```
+
+Así, los jugadores con fatiga alta (mayor de 60) presentan un índice de rendimiento mucho menor.
+
+A continuación, vemos a marcar los outliers de la relación.
+
+```{r}
+# Crear un subconjunto sin NA ni Inf
+datos_clean <- datos[is.finite(datos$fatigue) & is.finite(datos$performance_index), ]
+
+fit <- lowess(datos_clean$fatigue, datos_clean$performance_index)
+
+# O usando loess (más flexible y moderno)
+fit_loess <- loess(performance_index ~ fatigue, data = datos_clean)
+
+res <- residuals(fit_loess)
+out <- abs(res) > 2 * sd(res)  # umbral exploratorio
+
+plot(datos_clean$fatigue, datos_clean$performance_index)
+lines(datos_clean$fatigue, predict(fit_loess), col = "blue", lwd = 2)
+points(datos_clean$fatigue[out], datos_clean$performance_index[out],
+       pch = 21, bg = "red", cex = 1.2)
+
+
+```
+
+Los puntos marcados en rojo son los posibles *outliers* de esta relación, que pueden marcar el ajuste.
+
+Por último, vamos a calcular el coeficiente de correlación de Spearman para esta relación, más adecuado debido al resultado analizado.
+
+```{r}
+
+cor(datos$fatigue, datos$performance_index,
+    use = "complete.obs", method = "spearman")
+
+```
+El coeficiente tiene un valor de -0.2149984, lo cual es razonablemente elevado. Sin embargo, vamos a ver la correlacion en los 2 grupos planteados previamente. Como parecían ser lineales, calcularemos el coeficiente de relación de Pearson.
+
+```{r}
+
+grupo <- ifelse(datos$fatigue <= 60, "low_mid", "high")
+cor(datos$fatigue[grupo=="low_mid"], datos$performance_index[grupo=="low_mid"],use = "complete.obs", method="pearson")
+cor(datos$fatigue[grupo=="high"], datos$performance_index[grupo=="high"],use = "complete.obs", method="pearson")
+
+
+```
+Así, vemos que la correlación es prácticamente nula para el grupo con fatiga baja, pero razonablemente elevada (inversamente) para el grupo de fatiga elevada.
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal en 2 tramos entre *fatigue* y *performance_index*. Factores como la correlación y la media del valor *performance_index* se ven marcados por este hecho.
+
+##### *sleep_hours*
+
+```{r}
+
+ggplot(datos, aes(x = sleep_hours, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Sleep hours",
+    y = "Performance index",
+    title = "Performance vs Sleep hours"
+  )
+
+
+```
+
+Vemos que la relación entre estas variables parece lineal, con tendencia creciente. Vamos a ver si existen *outliers* influyentes en la relación.
+
+```{r}
+
+ggplot(datos, aes(sleep_hours, performance_index)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_ellipse(level = 0.95) +
+  theme_minimal()
+
+
+```
+Las observaciones que quedan fuera de la elipse son posibles *outliers* de esta relación. En particular, vamos a ver aquellos influyentes.
+
+```{r}
+modelo <- lm(performance_index ~ sleep_hours, data = datos)
+cooks <- cooks.distance(modelo)
+which(cooks > 4 / length(cooks))
+
+```
+Estos índices podrían influir de forma elevada en el ajuste de la relación lineal.
+
+Vamos a calcular el coeficiente de correlación de Pearson para esta relación.
+
+```{r}
+
+cor(datos$sleep_hours, datos$performance_index,
+    use = "complete.obs", method = "pearson")
+
+```
+El coeficiente tiene un valor de 0.1382186, lo cual es ligeramente elevado. 
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal entre *sleep_hours* y *performance_index*. No se observaron patrones no lineales marcados, aunque se detectaron varias observaciones con influencia elevada en el ajuste lineal.
+
+##### *nutrition_score*
+
+```{r}
+
+ggplot(datos, aes(x = nutrition_score, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Nutrition Score",
+    y = "Performance index",
+    title = "Performance vs Nutrition Score"
+  )
+
+
+```
+
+Vemos que la relación entre estas variables parece lineal, con tendencia neutra, aunque la "nube" de observaciones parece dispersa. Vamos a ver si existen *outliers* influyentes en la relación.
+
+```{r}
+
+ggplot(datos, aes(nutrition_score, performance_index)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_ellipse(level = 0.95) +
+  theme_minimal()
+
+
+```
+Las observaciones que quedan fuera de la elipse son posibles *outliers* de esta relación. En particular, vamos a ver aquellos influyentes.
+
+```{r}
+modelo <- lm(performance_index ~ nutrition_score, data = datos)
+cooks <- cooks.distance(modelo)
+which(cooks > 4 / length(cooks))
+
+```
+Estos índices podrían influir de forma elevada en el ajuste de la relación lineal.
+
+Vamos a calcular el coeficiente de correlación de Pearson para esta relación.
+
+```{r}
+
+cor(datos$nutrition_score, datos$performance_index,
+    use = "complete.obs", method = "pearson")
+
+```
+El coeficiente tiene un valor de 0.01274685, lo cual es muy poco. 
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal entre *nutrition_score* y *performance_index*. No se observaron patrones no lineales marcados, aunque se detectaron varias observaciones con influencia elevada en el ajuste lineal. Sin embargo, es importante destacar la práctica incorrelación de ambas variables.
+
+##### *previous_injuries*
+
+```{r}
+
+ggplot(datos, aes(x = previous_injuries, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Previous injuries",
+    y = "Performance index",
+    title = "Performance vs Previous injuries"
+  )
+
+
+```
+
+Vemos que la relación entre estas variables parece lineal, a pesar de ser difícil encontrar otro tipo de relación al tratarse de una variable entera. Vamos a emplear, por tanto, la transformación en logaritmo que planteamos previamente.
+
+```{r}
+
+ggplot(datos, aes(x = previous_injuries_log, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Previous injuries",
+    y = "Performance index",
+    title = "Performance vs Previous injuries"
+  )
+
+```
+Aquí se aprecia mejor la linealidad con tendencia neutra. Por tanto, trabajaremos con esta transformación. A continuación, veremos los *outliers* de la relación.
+
+```{r}
+
+ggplot(datos, aes(previous_injuries_log, performance_index)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_ellipse(level = 0.95) +
+  theme_minimal()
+
+
+```
+Las observaciones que quedan fuera de la elipse son posibles *outliers* de esta relación. En particular, vamos a ver aquellos influyentes.
+
+```{r}
+modelo <- lm(performance_index ~ previous_injuries_log, data = datos)
+cooks <- cooks.distance(modelo)
+which(cooks > 4 / length(cooks))
+
+```
+Estos índices podrían influir de forma elevada en el ajuste de la relación lineal.
+
+Vamos a calcular el coeficiente de correlación de Pearson para esta relación.
+
+```{r}
+
+cor(datos$previous_injuries_log, datos$performance_index,
+    use = "complete.obs", method = "pearson")
+
+```
+El coeficiente tiene un valor de 0.01226061, lo cual es muy pequeño. 
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal entre *previous_injuries_log* y *performance_index*, a pesar de su baja correlación. No se observaron patrones no lineales marcados, aunque se detectaron varias observaciones con influencia elevada en el ajuste lineal.
+
+##### *strength_1RM*
+
+```{r}
+
+ggplot(datos, aes(x = strength_1RM, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Strength_1RM",
+    y = "Performance index",
+    title = "Performance vs Strength_1RM"
+  )
+
+
+```
+
+Vemos que la relación entre estas variables parece lineal, con ligeras desviaciones, que no resultan especialmente llamativas. Vamos a ver si existen *outliers* influyentes en la relación.
+
+```{r}
+
+ggplot(datos, aes(strength_1RM, performance_index)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  stat_ellipse(level = 0.95) +
+  theme_minimal()
+
+
+```
+Las observaciones que quedan fuera de la elipse son posibles *outliers* de esta relación. En particular, vamos a ver aquellos influyentes.
+
+```{r}
+modelo <- lm(performance_index ~ strength_1RM, data = datos)
+cooks <- cooks.distance(modelo)
+which(cooks > 4 / length(cooks))
+
+```
+Estos índices podrían influir de forma elevada en el ajuste de la relación lineal.
+
+Vamos a calcular el coeficiente de correlación de Pearson para esta relación.
+
+```{r}
+
+cor(datos$strength_1RM, datos$performance_index,
+    use = "complete.obs", method = "pearson")
+
+```
+El coeficiente tiene un valor de 0.02971936, lo cual es muy poco. 
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal entre *strength_1RM* y *performance_index*, a pesar de su baja correlación. No se observaron patrones no lineales marcados, aunque se detectaron varias observaciones con influencia elevada en el ajuste lineal.
+
+##### *agility_time*
+
+```{r}
+
+ggplot(datos, aes(x = agility_time, y = performance_index)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    x = "Agility time",
+    y = "Performance index",
+    title = "Performance vs Agility time"
+  )
+
+
+```
+
+Vemos que la relación entre estas variables parece lineal, pero con matices. Podemos distinguir un caso similar al de *fatigue*, donde hay un primer tramo lineal de tendencia negativa hasta los 10 segundos, y otro de tendencia neutra de ahí en adelante.
+
+Para corroborarlo, vamos a calcular la media del índice de rendimiento para los jugadores con un valor de *agility_time* menor que 9.75, y para aquellos con un valor mayor
+
+```{r}
+
+cut_agility <- cut(datos$agility_time, breaks = c(-Inf, 9.75, Inf))
+tapply(datos$performance_index, cut_agility, mean)
+
+
+```
+Vemos que los valores obtenidos son dispares. Por ende, vamos a plantear un test para ver si la diferencia es estadísticamente significativa.
+
+```{r}
+
+grupo <- ifelse(datos$agility_time <= 9.75, "low", "mid_high")
+t.test(datos$performance_index ~ grupo)
+
+
+```
+Vemos que el p-valor es muy pequeño, por lo que concluimos que la diferencia de estas medias es estadísticamente significativa.
+
+Vemos un boxplot de ambos grupos en función de su índice de rendimiento.
+
+```{r}
+
+boxplot(datos$performance_index ~ grupo, outline = TRUE)
+
+```
+
+Así, los jugadores con un tiempo de agilidad bajo (menor que 9.75) presentan un índice de rendimiento mucho mayor que los demás jugadores.
+
+A continuación, vemos a marcar los outliers de la relación.
+
+```{r}
+# Crear un subconjunto sin NA ni Inf
+datos_clean <- datos[is.finite(datos$agility_time) & is.finite(datos$performance_index), ]
+
+fit <- lowess(datos_clean$agility_time, datos_clean$performance_index)
+
+# O usando loess (más flexible y moderno)
+fit_loess <- loess(performance_index ~ agility_time, data = datos_clean)
+
+res <- residuals(fit_loess)
+out <- abs(res) > 2 * sd(res)  # umbral exploratorio
+
+plot(datos_clean$agility_time, datos_clean$performance_index)
+lines(datos_clean$agility_time, predict(fit_loess), col = "blue", lwd = 2)
+points(datos_clean$agility_time[out], datos_clean$performance_index[out],
+       pch = 21, bg = "red", cex = 1.2)
+
+
+```
+
+Los puntos marcados en rojo son los posibles *outliers* de esta relación, que pueden marcar el ajuste.
+
+Por último, vamos a calcular el coeficiente de correlación de Spearman para esta relación, más adecuado debido al resultado analizado.
+
+```{r}
+
+cor(datos$agility_time, datos$performance_index,
+    use = "complete.obs", method = "spearman")
+
+```
+El coeficiente tiene un valor de -0.0806302, lo cual es razonablemente bajo. Sin embargo, vamos a ver la correlacion en los 2 grupos planteados previamente. Como parecían ser lineales, calcularemos el coeficiente de relación de Pearson.
+
+```{r}
+
+grupo <- ifelse(datos$agility_time <= 9.75, "low", "mid_high")
+cor(datos$agility_time[grupo=="low"], datos$performance_index[grupo=="low"],use = "complete.obs", method="pearson")
+cor(datos$agility_time[grupo=="mid_high"], datos$performance_index[grupo=="mid_high"],use = "complete.obs", method="pearson")
+
+
+```
+Así, vemos que la correlación es prácticamente nula para el grupo con *agility_time* alto, pero razonablemente elevada (inversamente) para el grupo de *agility_time* bajo.
+
+De esta manera, la exploración bivariada permitió identificar una relación aproximadamente lineal en 2 tramos entre *agility_time* y *performance_index*. Factores como la correlación y la media del valor *performance_index* se ven marcados por este hecho.
+
+
+#### Relaciones entre predictores
+
+```{r}
+
+predictores <- datos[, c(
+  "training_hours", "match_intensity", "fatigue", "sleep_hours",
+  "nutrition_score", "previous_injuries", "strength_1Rm", "agility_time"
+)]
+
+cor(predictores, use = "complete.obs", method = "spearman")
+
+```
 
 A continuación vemos las correlaciones
 
@@ -2339,7 +4062,7 @@ A continuación vemos las correlaciones
 
 library(corrplot)
 
-vars <- df |>
+vars <- datos |>
   select(
     performance_index,
     training_hours,
