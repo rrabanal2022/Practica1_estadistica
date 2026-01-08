@@ -4068,10 +4068,183 @@ En el anterior apartado, vimos las relaciones y tendencias entre la variable res
 ```{r}
 
 modelo_inicial <- lm(datos$performance_index ~ training_hours + match_intensity + fatigue + sleep_hours + nutrition_score + previous_injuries + strength_1RM + agility_time, data = datos)
-summary(modelo_inicial)
 
 
 ```
 
 ## 5. Análisis de los residuos y medidas de ajuste
+
+En primer lugar, extraemos los residuos
+
+```{r}
+
+# Valores ajustados
+fitted_vals <- fitted(modelo_inicial)
+
+# Residuos
+res <- residuals(modelo_inicial)
+
+
+```
+
+
+A continuación, presentaremos la gráfica de residuos vs valores ajustados
+
+```{r}
+
+plot(fitted_vals, res,
+     xlab = "Valores ajustados",
+     ylab = "Residuos",
+     main = "Residuos vs Valores Ajustados")
+abline(h = 0, col = "red", lwd = 2)
+
+
+```
+Vemos que no hay problemas aparentes de linealidad, el encontrar un patrón aparentemente aleatorio. Además, la varianza parece permanecer constante, por lo que tampoco encontramos problemas de heterocedasticidad.
+
+A continuación, mostraremos un histograma de los residuos, para ver si hay problemas de asimetría o valores extremos.
+
+```{r}
+
+hist(res, breaks = 20, main = "Histograma de residuos", xlab = "Residuos")
+
+
+```
+
+El histograma sigue una distribución normal, sin colas pesadas ni valores que alteren los supuestos de los residuos, como la simetría que parecen cumplir.
+
+Por último, para evaluar la normalidad, mostramos un *QQ-plot* de los residuos.
+
+```{r}
+
+qqnorm(res)
+qqline(res, col = "red")
+
+
+```
+
+Los residuos se disponen en su gran mayoría sobre la línea del *QQ-plot*, por lo que podemos confirmar que siguen una distribución normal. Sin embargo, hay algunos valores en una de las colas que se desvían ligeramente. Estos peuden resultar un punto probolemático, pero no parecen lo suficientemente relevantes como para cambiar el razonamiento sobre la normalidad.
+
+A continuación, vamos a identificar *outliers* en el modelo.
+
+```{r}
+
+# Residuales estandarizados
+res_std <- rstandard(modelo_inicial)
+
+# Umbral típico: |res_std| > 2
+outliers <- abs(res_std) > 2
+
+# Marcar en scatter
+plot(datos$fatigue, datos$performance_index, main = "Outliers en Residuos")
+points(datos$fatigue[outliers], datos$performance_index[outliers],
+       pch = 21, bg = "red", cex = 1.2)
+
+
+```
+
+De todas las observaciones, los puntos marcados en rojos se corresponden con *outliers*. Como podemos ver, no parece que influyan demasiado en el modelo, por lo que los dejaremos presentes, pero los tendremos en cuenta.
+
+Lo siguiente será mirar las medidas de ajuste del modelo
+
+```{r}
+
+summary(modelo_inicial)
+
+```
+
+Vemos que el R^2 ajustado tiene un valor de 0.4156. Esto quiere decir que se explica un 41.56% de la variable *performance_index* con este modelo. De este modo, podemos ver que es un valor mejorable.
+
+En cuanto al p-valor de los predictores, vemos que hay 3 que tienen un valor muy elevado (*previous_injuries*, *strength_1RM* y *nutrition_score*). Esto quiere decir que no aportan información estadísticamente significativa para explicar la variación de la variable respuesta *performance_index*.
+
+Por otro lado, el p-valor del estadístico F es muy bajo. Esto indica que el modelo en su conjunto es estadísticamente significativo, y que aporta información.
+
+De esta manera, los principales problemas los encontramos en un valor bajo de R^2 y las variables ya mencionadas con un p-valor bajo.
+
+
+## 6. Mejora del modelo
+
+A continuación, vamos a introducir varias mejoras al modelo. 
+
+En primer lugar, vamos a introducir la modificación de la variable *previous_injuries* por *previous_injuries_log*
+
+```{r}
+
+modelo2 <- lm(datos$performance_index ~ training_hours + match_intensity + fatigue + sleep_hours + nutrition_score + previous_injuries_log + strength_1RM + agility_time, data = datos)
+
+summary(modelo2)
+```
+
+Vemos que la variable sigue con un p-valor bajo, por lo que eliminaremos esta variable a ver si incrementa el valor de R^2
+
+```{r}
+
+modelo3 <- lm(datos$performance_index ~ training_hours + match_intensity + fatigue + sleep_hours + nutrition_score + strength_1RM + agility_time, data = datos)
+
+summary(modelo3)
+
+```
+
+Vemos que el modelo mejora algo sin esta variable. Por tanto, la quitaremos. Asimismo, haremos la misma comprobación para la variable *nutrition_score*.
+
+```{r}
+
+modelo4 <- lm(datos$performance_index ~ training_hours + match_intensity + fatigue + sleep_hours + strength_1RM + agility_time, data = datos)
+
+summary(modelo4)
+
+```
+
+Una vez más, el valor de R^2 incrementa. Seguiremos el mismo procedimiento para *strength_1RM*
+
+```{r}
+
+modelo5 <- lm(datos$performance_index ~ training_hours + match_intensity + fatigue + sleep_hours + agility_time, data = datos)
+
+summary(modelo5)
+
+```
+
+En este caso, el valor de R^2 disminuye, por lo que entendemos que la variable *strength_1RM* es una variable que aporta al modelo, así que la conservaremos.
+
+A continuación, haremos otros cambios, introduciendo no linealidades.
+
+Empezamos introduciendo *piecewise* en *fatigue*
+
+```{r}
+
+datos$fatigue_60 <- pmax(0, datos$fatigue - 60)
+
+modelo6 <- lm(performance_index ~ training_hours + match_intensity + fatigue + fatigue_60 + sleep_hours + strength_1RM + agility_time, data = datos)
+
+summary(modelo6)
+
+
+```
+
+Vemos que el modelo ha mejorado con este *piecewise*. Haremos lo propio para *agility_time*
+
+```{r}
+
+datos$agility_time_pw <- pmax(0, datos$agility_time - 9.75)
+
+modelo7 <- lm(performance_index ~ training_hours + match_intensity + fatigue + fatigue_60 + sleep_hours + strength_1RM + agility_time + agility_time_pw, data = datos)
+
+summary(modelo7)
+
+
+```
+
+Esto también mejora el modelo. Por último, vamos a plantear el uso de *splines* para *match_intensity*, ya que presentaba una relación difícil de recoger de forma lineal con la variable respuesta.
+
+
+```{r}
+
+modelo8 <- lm(performance_index ~ training_hours + bs(match_intensity, df=4) + fatigue + fatigue_60 + sleep_hours + strength_1RM + agility_time + agility_time_pw, data = datos)
+
+summary(modelo8)
+
+```
+Vemos que el modelo mejora en general con esta nueva introducción.
+
 
