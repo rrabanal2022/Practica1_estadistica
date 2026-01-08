@@ -1657,7 +1657,7 @@ Por otro lado, calcularemos el AUC.
 
 ```{r}
 
-auc_val <- auc(roc_obj)
+auc_val <- pROC::auc(roc_obj)
 auc_val
 
 ```
