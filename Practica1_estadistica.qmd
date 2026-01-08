@@ -4045,40 +4045,33 @@ De esta manera, la exploración bivariada permitió identificar una relación ap
 
 #### Relaciones entre predictores
 
+Vamos a ver las correlaciones que hay entre los predictores. En caso de haber algun vaor muy llamativo, lo estudiaremos en profundidad. 
+
 ```{r}
 
 predictores <- datos[, c(
   "training_hours", "match_intensity", "fatigue", "sleep_hours",
-  "nutrition_score", "previous_injuries", "strength_1Rm", "agility_time"
+  "nutrition_score", "previous_injuries", "strength_1RM", "agility_time"
 )]
 
 cor(predictores, use = "complete.obs", method = "spearman")
 
 ```
 
-A continuación vemos las correlaciones
+Vemos que la gran mayoría de predictores están prácticamente incorrelacionados. Por tanto, no hay nada de lo que preocuparse, y podremos seguir con el estudio.
+
+
+## 4. Modelo inicial sencillo
+
+En el anterior apartado, vimos las relaciones y tendencias entre la variable respuesta. Lo que se pide a continuación, es empezar a desarrollar el modelo general.
 
 ```{r}
 
-library(corrplot)
-
-vars <- datos |>
-  select(
-    performance_index,
-    training_hours,
-    match_intensity,
-    fatigue,
-    sleep_hours,
-    nutrition_score,
-    strength_1RM,
-    agility_time,
-    injuries_count
-  )
-
-corrplot(cor(vars, use = "complete.obs"), method = "color")
+modelo_inicial <- lm(datos$performance_index ~ training_hours + match_intensity + fatigue + sleep_hours + nutrition_score + previous_injuries + strength_1RM + agility_time, data = datos)
+summary(modelo_inicial)
 
 
 ```
 
-
+## 5. Análisis de los residuos y medidas de ajuste
 
