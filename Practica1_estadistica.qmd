@@ -34,6 +34,7 @@ library(ggplot2)
 library(MASS)
 library(pROC)
 library(DescTools)
+library(Metrics)
 
 ```
 
@@ -4246,5 +4247,165 @@ summary(modelo8)
 
 ```
 Vemos que el modelo mejora en general con esta nueva introducción.
+
+A continuación, vamos a añadir variables categóricas, como la posición, el equipo o si un jugador es zurdo.
+
+```{r}
+
+modelo9 <- lm(performance_index ~ training_hours + bs(match_intensity, df=4) + fatigue + fatigue_60 + sleep_hours + strength_1RM + agility_time + agility_time_pw + left_footed, data = datos)
+
+summary(modelo9)
+
+```
+
+Vemos que el modelo mejora incluyendo la variable binaria *left_footed*. Sin embargo, el R^2 es menor introduciendo las variables categóricas *team* y *position*.
+
+Vamos a ver el AIC y el BIC para confirmar con qué modelo seguiremos.
+
+```{r}
+
+AIC(modelo_inicial, modelo2, modelo3, modelo4, modelo5, modelo6, modelo7, modelo8, modelo9)
+BIC(modelo_inicial, modelo2, modelo3, modelo4, modelo5, modelo6, modelo7, modelo8, modelo9)
+
+
+```
+
+El mejor modelo hasta el momento, con las modificaciones planteadas, es el 6, por lo que continuaremos con este.
+
+A continuación, vamos a presentar las interacciones entre variables importantes. Probaremos a plantear interacciones en campos relacionados, como *fatigue* y *match_intensity*, *fatigue* y *training_hours*, *agility_time* y *strength_1RM*, *sleep_hours* y *fatigue*, ...
+
+Empezaremos aplicando la interacción *agility_time*x*strength_1RM*
+
+```{r}
+
+modelo61 <- lm(performance_index ~ training_hours + match_intensity + fatigue + fatigue_60 + sleep_hours + strength_1RM + agility_time + agility_time:strength_1RM, data = datos)
+
+summary(modelo61)
+
+
+```
+
+Parece ser que el modelo mejora. Con el resto de interacciones, el valor de R^2 disminuye. Vamos a volver a revisar el AIC y el BIC para ver con qué modelo continuar
+
+
+```{r}
+
+AIC(modelo6,modelo61)
+BIC(modelo6, modelo61)
+
+```
+
+
+Así, este último modelo resulta el mejor hasta el momento. En cuanto a los valores faltantes, vamos a ver los NA por variable para ver cómo tratarlos
+
+```{r}
+
+colSums(is.na(datos))
+
+```
+
+De las variables que usamos, hay 5 con valores faltantes. Sin embargo, cuando realizamos imputaciones en cualquiera de ellas, empeoramos el modelo. Por tanto, lo dejaremos tal cual está, omitiendo las observaciones con valores faltantes.
+
+Así, renombraremos al último modelo desarrollado como modelo_final
+
+```{r}
+
+modelo_final <- modelo61
+
+```
+
+
+## 7. Evaluación del modelo final 
+
+En primer lugar, dividiremos en train y test
+
+```{r}
+
+n <- nrow(datos)
+train_index <- sample(seq_len(n), size = 0.7 * n)  # 70% train
+train <- datos[train_index, ]
+test  <- datos[-train_index, ]
+
+
+```
+
+A continuación, ajustamos el modelo en train
+
+```{r}
+
+modelo_train <- lm(performance_index ~ training_hours + match_intensity + fatigue + fatigue_60 +
+                   sleep_hours + strength_1RM + agility_time + agility_time:strength_1RM,
+                   data = train)
+
+```
+
+A continuación, analizamos las medidas de bondad de ajuste en train
+
+```{r}
+
+r2_adj <- summary(modelo_train)$adj.r.squared
+aic_val <- AIC(modelo_train)
+bic_val <- BIC(modelo_train)
+deviance_val <- deviance(modelo_train)
+
+cat("Medidas de bondad de ajuste (train set):\n")
+cat("R² ajustado:", round(r2_adj, 3), "\n")
+cat("AIC:", round(aic_val, 2), "\n")
+cat("BIC:", round(bic_val, 2), "\n")
+cat("Devianza:", round(deviance_val, 2), "\n\n")
+
+```
+Así, el R^2 tendrá un valor de 0.449 , lo que implica que el modelo explica un 44.9% de la variabilidad de *performance_index*. 
+
+Por otro lado, el valor del AIC es de 2379.642, y el del BIC es de 2418.25 (mucho menores que los de los otros modelos que habíamos planteado previamente).
+
+Por último, la devianza tiene un valor de 17077.82, muy elevado pero previsible con un modelo de estas características.
+
+A continuación, planteamos las predicciones en el conjunto de prueba.
+
+```{r}
+
+test_complete <- test[complete.cases(test[, c("performance_index",
+                                               "training_hours",
+                                               "match_intensity",
+                                               "fatigue",
+                                               "fatigue_60",
+                                               "sleep_hours",
+                                               "strength_1RM",
+                                               "agility_time")]), ]
+pred_test <- predict(modelo_train, newdata = test_complete)
+
+rmse_val <- sqrt(mean((test_complete$performance_index - pred_test)^2))
+mae_val  <- mean(abs(test_complete$performance_index - pred_test))
+
+
+
+cat("Medidas predictivas (test set):\n")
+cat("RMSE:", round(rmse_val, 3), "\n")
+cat("MAE:", round(mae_val, 3), "\n")
+
+```
+Con esto, podemos hacernos una idea de la presición del modelo, con un error medio de entre 6 y 7 unidades del valor del *performance_index* estimado.
+
+## 8. Síntesis final
+
+A lo largo de esta práctica se ha ajustado un modelo lineal para explicar *performance_index* en función de los predictores continuos relevantes: *training_hours*, *match_intensity*, *fatigue*, *fatigue_60*, *sleep_hours*, *strength_1RM*, *agility_time* y la interacción significativa *agility_time* × *strength_1RM*.
+
+El modelo presenta un R^2 ajustado de 0.449  y valores de AIC = 2379.64 y BIC = 2418.25 , indicando un buen equilibrio entre ajuste y complejidad (especialmente frente a los otros modelos planteados a lo largo del ejercicio). La devianza residual es 17077.82 , reflejando la magnitud de error total en el conjunto de entrenamiento.
+
+En el conjunto de prueba, las predicciones del modelo muestran un RMSE = 7.849  y un MAE = 6.312 , lo que indica la precisión promedio de las predicciones fuera de la muestra utilizada para ajustar el modelo.
+
+De esta forma, no hemos obtenido un modelo perfecto, pero sí uno capaz de predecir el índice de rendimiento de un jugador dentro de un rango no muy amplio de opciones.
+
+Durante el proceso de modelización, he aprendido muchas cosas. Entre ellas, el proceso completo de desarrollar un modelo, en no tener miedo a volver atrás para cambiar cosas, a probar y fallar hasta conseguir lo que quiero, y muchas otras más. Sin embargo, si quiero destacar una es el hecho de haber aprendido que muchas veces, lo aparentemente más completo o difícil, no tiene por qué ser lo mejor. Esto ha sido un choque de realidad, pero hay veces que el modelo empeora al añadirle cosas que en nuestra cabeza tiene sentido, pero que luego realmente vemos que no aporta, sino que confunde. De esta manera, nos hemos dado cuenta de lo importante que es no olvidar hacer las cosas simple, y buscar la efectividad en el proceso.
+
+En cuanto a las limitaciones, destacamos una notable falta de observaciones. Un mayor número de filas, nos habría permitido distinguir más patrones y con mayor claridad, que nos habría ayudado de cara al ajuste del modelo. Además, creemos que puede haber cierto sesgo en los datos que ha provocado que un determinado número de interacciones no hayan funcionado en el modelo. Sin embargo, es también achacable al tamaño de la muestra. Por otro lado, existen más factores como la temporalidad, que no nos permiten hacer un seguimiento preciso de los datos y su evolución, viéndonos limitados a este conjunto de datos "congelados" en el tiempo.
+
+En cuanto a posibles mejoras, nos gustaría profundizar en este aspecto de la temporalidad. Si se puediesen conseguir los datos para ver la evolución de los jugadores y qué eventos ocurren con el tiempo, la labor de la predicción sería una tarea más completa. Además, permitiría entrenar mejor a los modelos planteados y confirmar o desmentir hipótesis. 
+
+Por otro lado, en cuanto al modelo, se podrían explorar otro tipo de interacciones, no linealidades e incluso predictores. Sin embargo, habría que ser cauteloso, ya que hemos visto que esto no siempre es lo mejor para el modelo. Asimismo, se podrían buscar otras finalidades con el modelo y otros tipos de predicciones.
+
+
+
 
 
